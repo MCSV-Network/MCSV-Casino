@@ -1,0 +1,680 @@
+Variables:
+	{slotprefix} = "&6[&eSLOT&6]&r"
+	{slot.play.%player%} = false
+	{jewelry-atari.%player%} = 0
+	{planks-atari.%player%} = 0
+	{nether-atari.%player%} = 0
+
+#宝石スロット=========================================================================================
+on sign change:
+	player has permission "casino.slots"
+	if line 1 of block is "[jewelry-slot]":
+		set line 1 of block to "&7-&c宝&6石&eス&aロ&bッ&5ト&7-"
+		set line 2 of block to "&e&l&n1回1,000円"
+		set line 4 of block to "&a&l&nクリックで回す！"
+
+on right click on sign:
+	if line 1 of block is "&7-&c宝&6石&eス&aロ&bッ&5ト&7-":
+		if line 2 of block is "&e&l&n1回1,000円":
+			if line 4 of block is "&a&l&nクリックで回す！":
+				if {slot.play.%player%} is false:
+					if player's money is less than 1000:
+						send "%{slotprefix}% &cスロットを回すには1,000円必要です！"
+						stop
+					else:
+						send "%{slotprefix}% &e&l&n1,000円&a払いました。"
+						set {slot.play.%player%} to true
+						remove 1000 from player's money
+						set line 4 of block to "&cプレイ中…"
+						set {_inv} to chest with 1 row named "&c&l宝&6&l石&e&lス&a&lロ&b&lッ&5&lト"
+						open {_inv} to player
+						set slot 0 of {_inv} to red stained glass pane named " "
+						set slot 1 of {_inv} to orange stained glass pane named " "
+						set slot 3 of {_inv} to yellow stained glass pane named " "
+						set slot 5 of {_inv} to lime stained glass pane named " "
+						set slot 7 of {_inv} to blue stained glass pane named " "
+						set slot 8 of {_inv} to magenta stained glass pane named " "
+						loop 60 times:
+							set {_reel1} to a random integer between 1 and 6
+							set {_reel2} to a random integer between 1 and 6
+							set {_reel3} to a random integer between 1 and 6
+								#リール1の設定
+							if {_reel1} is 1:
+								set {_item1} to amethyst shard
+							if {_reel1} is 2:
+								set {_item1} to lapis lazuli
+							if {_reel1} is 3:
+								set {_item1} to gold ingot
+							if {_reel1} is 4:
+								set {_item1} to diamond
+							if {_reel1} is 5:
+								set {_item1} to emerald
+							if {_reel1} is 6:
+								set {_item1} to netherite ingot
+								#リール2の設定
+							if {_reel2} is 1:
+								set {_item2} to amethyst shard
+							if {_reel2} is 2:
+								set {_item2} to lapis lazuli
+							if {_reel2} is 3:
+								set {_item2} to gold ingot
+							if {_reel2} is 4:
+								set {_item2} to diamond
+							if {_reel2} is 5:
+								set {_item2} to emerald
+							if {_reel2} is 6:
+								set {_item2} to netherite ingot
+
+								#リール3の設定
+							if {_reel3} is 1:
+								set {_item3} to amethyst shard
+							if {_reel3} is 2:
+								set {_item3} to lapis lazuli
+							if {_reel3} is 3:
+								set {_item3} to gold ingot
+							if {_reel3} is 4:
+								set {_item3} to diamond
+							if {_reel3} is 5:
+								set {_item3} to emerald
+							if {_reel3} is 6:
+								set {_item3} to netherite ingot
+
+							set slot 2 of {_inv} to {_item1}
+							set slot 4 of {_inv} to {_item2}
+							set slot 6 of {_inv} to {_item3}
+							play sound "block.large_amethyst_bud.place" to player
+							wait 1 tick
+					set line 4 of block to "&a&l&nクリックで回す！"
+					if {_reel1} is {_reel2}:
+						if {_reel1} is {_reel3}:
+							add 50000 to player's money
+							set {slot.play.%player%} to false
+							add 1 to {jewelry-atari.%player%}
+							play sound "entity.player.levelup" to player
+							play sound "ui.toast.challenge_complete" to player
+							command "/discordsrv bcast > [SLOT] **__%player%__**さんが、**宝石スロット**で勝利し、**__30,000円__**を受け取りました！"
+							broadcast "%{slotprefix}% &b&l%player%&aさんが、&c&l宝&6&l石&e&lス&a&lロ&b&lッ&5&lト&aで勝利し、&e&l&n30,000円&aを受け取りました！"
+							wait 1 second
+							set {slot.play.%player%} to false
+							close player's inventory
+							stop
+
+						else:
+							play sound "block.note_block.bass" to player
+							send "%{slotprefix}% &c残念！外れです！"
+							wait 1 second
+							set {slot.play.%player%} to false
+							close player's inventory
+							stop
+
+					else:
+						play sound "block.note_block.bass" to player
+						send "%{slotprefix}% &c残念！外れです！"
+						wait 1 second
+						set {slot.play.%player%} to false
+						close player's inventory
+						stop
+				
+			if {slot.play.%player%} is true:
+				send "%{slotprefix}% &cスロットプレイ中はほかのスロットを回すことはできません！"
+				stop
+			
+		if line 4 of block is "&cプレイ中…":
+			send "%{slotprefix}% &c現在スロットが回っています！"
+			stop
+
+
+
+on inventory click:
+	if name of player's current inventory contain "&c&l宝&6&l石&e&lス&a&lロ&b&lッ&5&lト":
+		cancel event
+#宝石スロット=========================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#木材スロット=========================================================================================
+on sign change:
+	player has permission "casino.slots"
+	if line 1 of block is "[planks-slot]":
+		set line 1 of block to "&7-&6木材スロット&7-"
+		set line 2 of block to "&e&l&n1回100円"
+		set line 4 of block to "&a&l&nクリックで回す！"
+
+on right click on sign:
+	if line 1 of block is "&7-&6木材スロット&7-":
+		if line 2 of block is "&e&l&n1回100円":
+			if line 4 of block is "&a&l&nクリックで回す！":
+				if {slot.play.%player%} is false:
+					if player's money is less than 100:
+						send "%{slotprefix}% &cスロットを回すには100円必要です！"
+						stop
+					else:
+						send "%{slotprefix}% &e&l&n100円&a払いました。"
+						set {slot.play.%player%} to true
+						remove 100 from player's money
+						set line 4 of block to "&cプレイ中…"
+						set {_inv} to chest with 1 row named "&6&l木材スロット"
+						open {_inv} to player
+						set slot 0 of {_inv} to orange stained glass pane named " "
+						set slot 1 of {_inv} to orange stained glass pane named " "
+						set slot 3 of {_inv} to orange stained glass pane named " "
+						set slot 5 of {_inv} to orange stained glass pane named " "
+						set slot 7 of {_inv} to orange stained glass pane named " "
+						set slot 8 of {_inv} to orange stained glass pane named " "
+						loop 60 times:
+							set {_reel1} to a random integer between 1 and 7
+							set {_reel2} to a random integer between 1 and 7
+							set {_reel3} to a random integer between 1 and 7
+								#リール1の設定
+							if {_reel1} is 1:
+								set {_item1} to bowl
+							if {_reel1} is 2:
+								set {_item1} to string
+							if {_reel1} is 3:
+								set {_item1} to feather
+							if {_reel1} is 4:
+								set {_item1} to stick
+							if {_reel1} is 5:
+								set {_item1} to cobweb
+							if {_reel1} is 6:
+								set {_item1} to bone
+							if {_reel1} is 7:
+								set {_item1} to dead bush
+
+								#リール2の設定
+							if {_reel2} is 1:
+								set {_item2} to bowl
+							if {_reel2} is 2:
+								set {_item2} to string
+							if {_reel2} is 3:
+								set {_item2} to feather
+							if {_reel2} is 4:
+								set {_item2} to stick
+							if {_reel2} is 5:
+								set {_item2} to cobweb
+							if {_reel2} is 6:
+								set {_item2} to bone
+							if {_reel2} is 7:
+								set {_item2} to dead bush
+
+								#リール3の設定
+							if {_reel3} is 1:
+								set {_item3} to bowl
+							if {_reel3} is 2:
+								set {_item3} to string
+							if {_reel3} is 3:
+								set {_item3} to feather
+							if {_reel3} is 4:
+								set {_item3} to stick
+							if {_reel3} is 5:
+								set {_item3} to cobweb
+							if {_reel3} is 6:
+								set {_item3} to bone
+							if {_reel3} is 7:
+								set {_item3} to dead bush
+
+							set slot 2 of {_inv} to {_item1}
+							set slot 4 of {_inv} to {_item2}
+							set slot 6 of {_inv} to {_item3}
+							play sound "block.lever.click" to player
+							wait 1 tick
+					set line 4 of block to "&a&l&nクリックで回す！"
+					if {_reel1} is {_reel2}:
+						if {_reel1} is {_reel3}:
+							add 3000 to player's money
+							set {slot.play.%player%} to false
+							add 1 to {planks-atari.%player%}
+							play sound "entity.player.levelup" to player
+							play sound "ui.toast.challenge_complete" to player
+							command "/discordsrv bcast > [SLOT] **__%player%__**さんが、**木材スロット**で勝利し、**__3,000円__**を受け取りました！"
+							broadcast "%{slotprefix}% &b&l%player%&aさんが、&6&l木材スロット&aで勝利し、&e&l&n3,000円&aを受け取りました！"
+							wait 1 second
+							set {slot.play.%player%} to false
+							close player's inventory
+							stop
+
+						else:
+							play sound "block.note_block.bass" to player
+							send "%{slotprefix}% &c残念！外れです！"
+							wait 1 second
+							set {slot.play.%player%} to false
+							close player's inventory
+							stop
+
+					else:
+						play sound "block.note_block.bass" to player
+						send "%{slotprefix}% &c残念！外れです！"
+						wait 1 second
+						set {slot.play.%player%} to false
+						close player's inventory
+						stop
+				
+			if {slot.play.%player%} is true:
+				send "%{slotprefix}% &cスロットプレイ中はほかのスロットを回すことはできません！"
+				stop
+			
+		if line 4 of block is "&cプレイ中…":
+			send "%{slotprefix}% &c現在スロットが回っています！"
+			stop
+
+
+
+on inventory click:
+	if name of player's current inventory contain "&6&l木材スロット":
+		cancel event
+#木材スロット=========================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#ネザースロット=========================================================================================
+command /selectnetherslotitemframe1:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe1} to true
+		send "&aselectnetherslotitemframe1 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe2:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe2} to true
+		send "&aselectnetherslotitemframe2 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe3:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe3} to true
+		send "&aselectnetherslotitemframe3 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe4:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe4} to true
+		send "&aselectnetherslotitemframe4 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe5:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe5} to true
+		send "&aselectnetherslotitemframe5 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe6:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe6} to true
+		send "&aselectnetherslotitemframe6 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe7:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe7} to true
+		send "&aselectnetherslotitemframe7 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe8:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe8} to true
+		send "&aselectnetherslotitemframe8 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe9:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe9} to true
+		send "&aselectnetherslotitemframe9 mode was turned on."
+		stop
+
+command /selectnetherslotlever:
+	permission: admin
+	trigger:
+		set {selectnetherslotlever} to true
+		send "selectnetherslotlever mode was turned on."
+		stop
+
+on right click on entity:
+	if {selectnetherslotitemframe1} is true:
+		set {netherslotitemframe1} to event-entity
+		send "&dset netherslotitemframe1 was successfully."
+		set {selectnetherslotitemframe1} to false
+		stop
+	if {selectnetherslotitemframe2} is true:
+		set {netherslotitemframe2} to event-entity
+		send "&dset netherslotitemframe2 was successfully."
+		set {selectnetherslotitemframe2} to false
+		stop
+	if {selectnetherslotitemframe3} is true:
+		set {netherslotitemframe3} to event-entity
+		send "&dset netherslotitemframe3 was successfully."
+		set {selectnetherslotitemframe3} to false
+		stop
+	if {selectnetherslotitemframe4} is true:
+		set {netherslotitemframe4} to event-entity
+		send "&dset netherslotitemframe4 was successfully."
+		set {selectnetherslotitemframe4} to false
+		stop
+	if {selectnetherslotitemframe5} is true:
+		set {netherslotitemframe5} to event-entity
+		send "&dset netherslotitemframe5 was successfully."
+		set {selectnetherslotitemframe5} to false
+		stop
+	if {selectnetherslotitemframe6} is true:
+		set {netherslotitemframe6} to event-entity
+		send "&dset netherslotitemframe6 was successfully."
+		set {selectnetherslotitemframe6} to false
+		stop
+	if {selectnetherslotitemframe7} is true:
+		set {netherslotitemframe7} to event-entity
+		send "&dset netherslotitemframe7 was successfully."
+		set {selectnetherslotitemframe7} to false
+		stop
+	if {selectnetherslotitemframe8} is true:
+		set {netherslotitemframe8} to event-entity
+		send "&dset netherslotitemframe8 was successfully."
+		set {selectnetherslotitemframe8} to false
+		stop
+	if {selectnetherslotitemframe9} is true:
+		set {netherslotitemframe9} to event-entity
+		send "&dset netherslotitemframe9 was successfully."
+		set {selectnetherslotitemframe9} to false
+		stop
+
+Variables:
+	{netherslot.play} = false
+
+on right click:
+	if {selectnetherslotlever} is true:
+		set {netherslotlever} to event-block
+		set {selectnetherslotlever} to false
+		stop
+	
+	#レバーで開始する処理
+	if event-block is {netherslotlever}:
+		if {netherslot.play} is false:
+			if {slot.play.%player%} is false:	
+				if player's money is less than 10000:
+					cancel event
+					send "%{slotprefix}% &cスロットを回すには10,000円必要です！"
+					stop
+				else:
+					cancel event
+					send "%{slotprefix}% &e&l&n10,000円&a払いました。"
+					set {slot.play.%player%} to true
+					set {netherslot.play} to true
+					remove 10000 from player's money
+					loop 30 times:
+						set {_nreel1} to random integer between 1 and 8
+						set {_nreel2} to random integer between 1 and 8
+						set {_nreel3} to random integer between 1 and 8
+						set {_nreel4} to random integer between 1 and 8
+						set {_nreel5} to random integer between 1 and 8
+						set {_nreel6} to random integer between 1 and 8
+						set {_nreel7} to random integer between 1 and 8
+						set {_nreel8} to random integer between 1 and 8
+						set {_nreel9} to random integer between 1 and 8
+						#リール1の設定
+						if {_nreel1} is 1:
+							set {_nitem1} to ancient debris
+						if {_nreel1} is 2:
+							set {_nitem1} to blaze rod
+						if {_nreel1} is 3:
+							set {_nitem1} to ender pearl
+						if {_nreel1} is 4:
+							set {_nitem1} to nether wart
+						if {_nreel1} is 5:
+							set {_nitem1} to wither skeleton skull
+						if {_nreel1} is 6:
+							set {_nitem1} to wither rose
+						if {_nreel1} is 7:
+							set {_nitem1} to ender eye
+						if {_nreel1} is 8:
+							set {_nitem1} to magma block
+						#リール2の設定
+						if {_nreel2} is 1:
+							set {_nitem2} to ancient debris
+						if {_nreel2} is 2:
+							set {_nitem2} to blaze rod
+						if {_nreel2} is 3:
+							set {_nitem2} to ender pearl
+						if {_nreel2} is 4:
+							set {_nitem2} to nether wart
+						if {_nreel2} is 5:
+							set {_niteml2} to wither skeleton skull
+						if {_nreel2} is 6:
+							set {_nitem2} to wither rose
+						if {_nreel2} is 7:
+							set {_nitem2} to ender eye
+						if {_nreel3} is 8:
+							set {_nitem2} to magma block
+						#リール3の設定
+						if {_nreel3} is 1:
+							set {_nitem3} to ancient debris
+						if {_nreel3} is 2:
+							set {_nitem3} to blaze rod
+						if {_nreel3} is 3:
+							set {_nitem3} to ender pearl
+						if {_nreel3} is 4:
+							set {_nitem3} to nether wart
+						if {_nreel3} is 5:
+							set {_niteml3} to wither skeleton skull
+						if {_nreel3} is 6:
+							set {_nitem3} to wither rose
+						if {_nreel3} is 7:
+							set {_nitem3} to ender eye
+						if {_nreel3} is 8:
+							set {_nitem3} to magma block
+						#リール4の設定
+						if {_nreel4} is 1:
+							set {_nitem4} to ancient debris
+						if {_nreel4} is 2:
+							set {_nitem4} to blaze rod
+						if {_nreel4} is 3:
+							set {_nitem4} to ender pearl
+						if {_nreel4} is 4:
+							set {_nitem4} to nether wart
+						if {_nreel4} is 5:
+							set {_niteml4} to wither skeleton skull
+						if {_nreel4} is 6:
+							set {_nitem4} to wither rose
+						if {_nreel4} is 7:
+							set {_nitem4} to ender eye
+						if {_nreel4} is 8:
+							set {_nitem4} to magma block
+						#リール5の設定
+						if {_nreel5} is 1:
+							set {_nitem5} to ancient debris
+						if {_nreel5} is 2:
+							set {_nitem5} to blaze rod
+						if {_nreel5} is 3:
+							set {_nitem5} to ender pearl
+						if {_nreel5} is 4:
+							set {_nitem5} to nether wart
+						if {_nreel5} is 5:
+							set {_niteml5} to wither skeleton skull
+						if {_nreel5} is 6:
+							set {_nitem5} to wither rose
+						if {_nreel5} is 7:
+							set {_nitem5} to ender eye
+						if {_nreel5} is 8:
+							set {_nitem5} to magma block
+						#リール6の設定
+						if {_nreel6} is 1:
+							set {_nitem6} to ancient debris
+						if {_nreel6} is 2:
+							set {_nitem6} to blaze rod
+						if {_nreel6} is 3:
+							set {_nitem6} to ender pearl
+						if {_nreel6} is 4:
+							set {_nitem6} to nether wart
+						if {_nreel6} is 5:
+							set {_niteml6} to wither skeleton skull
+						if {_nreel6} is 6:
+							set {_nitem6} to wither rose
+						if {_nreel6} is 7:
+							set {_nitem6} to ender eye
+						if {_nreel6} is 8:
+							set {_nitem6} to magma block
+						#リール7の設定
+						if {_nreel7} is 1:
+							set {_nitem7} to ancient debris
+						if {_nreel7} is 2:
+							set {_nitem7} to blaze rod
+						if {_nreel7} is 3:
+							set {_nitem7} to ender pearl
+						if {_nreel7} is 4:
+							set {_nitem7} to nether wart
+						if {_nreel7} is 5:
+							set {_nitem7} to wither skeleton skull
+						if {_nreel7} is 6:
+							set {_nitem7} to wither rose
+						if {_nreel7} is 7:
+							set {_nitem7} to ender eye
+						if {_nreel7} is 8:
+							set {_nitem7} to magma block
+						#リール8の設定
+						if {_nreel8} is 1:
+							set {_nitem8} to ancient debris
+						if {_nreel8} is 2:
+							set {_nitem8} to blaze rod
+						if {_nreel8} is 3:
+							set {_nitem8} to ender pearl
+						if {_nreel8} is 4:
+							set {_nitem8} to nether wart
+						if {_nreel8} is 5:
+							set {_nitem82} to wither skeleton skull
+						if {_nreel8} is 6:
+							set {_nitem8} to wither rose
+						if {_nreel8} is 7:
+							set {_nitem8} to ender eye
+						if {_nreel8} is 8:
+							set {_nitem8} to magma block
+						#リール9の設定
+						if {_nreel9} is 1:
+							set {_nitem9} to ancient debris
+						if {_nreel9} is 2:
+							set {_nitem9} to blaze rod
+						if {_nreel9} is 3:
+							set {_nitem9} to ender pearl
+						if {_nreel9} is 4:
+							set {_nitem9} to nether wart
+						if {_nreel9} is 5:
+							set {_nitem92} to wither skeleton skull
+						if {_nreel9} is 6:
+							set {_nitem9} to wither rose
+						if {_nreel9} is 7:
+							set {_nitem9} to ender eye
+						if {_nreel9} is 8:
+							set {_nitem9} to magma block
+						
+						#額縁にアイテムセット
+						set item of {netherslotitemframe1} to {_nitem1}
+						set item of {netherslotitemframe2} to {_nitem2}
+						set item of {netherslotitemframe3} to {_nitem3}
+						set item of {netherslotitemframe4} to {_nitem4}
+						set item of {netherslotitemframe5} to {_nitem5}
+						set item of {netherslotitemframe6} to {_nitem6}
+						set item of {netherslotitemframe7} to {_nitem7}
+						set item of {netherslotitemframe8} to {_nitem8}
+						set item of {netherslotitemframe9} to {_nitem9}
+						play sound "block.rooted_dirt.step" with volume 0.1 and pitch 1 at player
+						wait 0.1 seconds
+					if {_nitem4} is {_nitem5}:
+						if {_nitem4} is {_nitem6}:
+							add 500000 to player's money
+							add 1 to {nether-atari.%player%}
+							play sound "entity.player.levelup" to player
+							play sound "ui.toast.challenge_complete" to player
+							play sound "entity.ender_dragon.ambient" to player
+							send title "&0&l&ko &5&lネザースロット &0&l&ko &c&l勝利！" to player
+							command "/discordsrv bcast > [SLOT] **__%player%__**さんが、**ネザースロット**で勝利し、**__500,000円__**を受け取りました！"
+							broadcast "%{slotprefix}% &b&l%player%&aさんが、&0&l&ko&5&lネザースロット&0&l&ko&aで勝利し、&e&l&n500,000円&aを受け取りました！"
+							give enchanted book named "&0&l&ko&5&l悪魔の本&0&l&ko" with lore "&dネザースロットで勝利したもののみに与えられる" and "&d悪魔の邪念が詰まった本。" to player
+							set {netherslot.play} to false
+							set {slot.play.%player%} to false
+							stop
+						else:
+							cancel event
+							play sound "block.note_block.bass" to player
+							send "%{slotprefix}% &c残念！外れです！"
+							wait 1 second
+							set {netherslot.play} to false
+							set {slot.play.%player%} to false
+							stop
+					else:
+						cancel event
+						play sound "block.note_block.bass" to player
+						send "%{slotprefix}% &c残念！外れです！"
+						wait 1 second
+						set {netherslot.play} to false
+						set {slot.play.%player%} to false
+						stop
+				
+			if {slot.play.%player%} is true:
+				send "%{slotprefix}% &cスロットプレイ中はほかのスロットを回すことはできません！"
+				cancel event
+				stop
+				
+		if {netherslot.play} is true:
+			cancel event
+			send "%{slotprefix}% &c現在スロットが回っています！"
+			stop
+#ネザースロット=========================================================================================
+
+
+
+
+
+
+
+
+#showslotinfoコマンド=========================================================================================
+command /showslotinfo [<player>]:
+	permission: admin
+	trigger:
+		if arg-1 is set:
+			send "%{slotprefix}% &b&l%arg-1%&eさんのスロット情報："
+			send "&c&l宝&6&l石&e&lス&a&lロ&b&lッ&5&lト&aでの当たり： &d%{jewelry-atari.%arg-1%}%"
+			send "&6&l木材スロット&aでの当たり： &d%{planks-atari.%arg-1%}%"
+			send "&0&l&ko&5&lネザースロット&0&l&ko&aでの当たり： &d%{nether-atari.%arg-1%}%"
+			stop
+#=========================================================================================
