@@ -1,0 +1,3176 @@
+command /casino:
+	trigger:
+		teleport player to {casino.spawn}
+		send "&6カジノへテレポートしました！"
+		stop
+
+command /setcasinospawn:
+	permission: admin
+	trigger:
+		set {casino.spawn} to location of player
+		stop
+
+
+
+
+
+
+
+
+Variables:
+	{slotprefix} = "&6[&eSLOT&6]&r"
+	{slot.play.%player%} = false
+
+command /casinodebug:
+	permission: admin
+	trigger:
+		loop all players:
+			set {jewelry-atari.%loop-player's uuid%} to 0
+			set {planks-atari.%loop-player's uuid%} to 0
+			set {nether-atari.%loop-player's uuid%} to 0
+			set {angel-atari.%loop-player's uuid%} to 0
+			set {slot.play.%player%} to false
+			set {netherslot.play} to false
+			set {angelslot.play} to false
+
+#宝石スロット=========================================================================================
+on sign change:
+	player has permission "casino.slots"
+	if line 1 of block is "[jewelry-slot]":
+		set line 1 of block to "&7-&c宝&6石&eス&aロ&bッ&5ト&7-"
+		set line 2 of block to "&e&l&n1回1,000円"
+		set line 4 of block to "&a&l&nクリックで回す！"
+
+on right click on sign:
+	if line 1 of block is "&7-&c宝&6石&eス&aロ&bッ&5ト&7-":
+		if line 2 of block is "&e&l&n1回1,000円":
+			if line 4 of block is "&a&l&nクリックで回す！":
+				if {slot.play.%player%} is false:
+					if player's money is less than 1000:
+						send "%{slotprefix}% &cスロットを回すには1,000円必要です！"
+						stop
+					else:
+						send "%{slotprefix}% &e&l&n1,000円&a払いました。"
+						add 1 to {slot.amount.play.%player's uuid%}
+						set {slot.play.%player%} to true
+						remove 1000 from player's money
+						set line 4 of block to "&cプレイ中…"
+						set {_inv} to chest with 1 row named "&c&l宝&6&l石&e&lス&a&lロ&b&lッ&5&lト"
+						open {_inv} to player
+						set slot 0 of {_inv} to red stained glass pane named " "
+						set slot 1 of {_inv} to orange stained glass pane named " "
+						set slot 3 of {_inv} to yellow stained glass pane named " "
+						set slot 5 of {_inv} to lime stained glass pane named " "
+						set slot 7 of {_inv} to blue stained glass pane named " "
+						set slot 8 of {_inv} to magenta stained glass pane named " "
+						
+						loop 40 times:
+							set {_reel1} to a random integer between 1 and 6
+							set {_reel2} to a random integer between 1 and 6
+							set {_reel3} to a random integer between 1 and 6
+							#リール1の設定
+							if {_reel1} is 1:
+								set {_item1} to amethyst shard
+							if {_reel1} is 2:
+								set {_item1} to lapis lazuli
+							if {_reel1} is 3:
+								set {_item1} to gold ingot
+							if {_reel1} is 4:
+								set {_item1} to diamond
+							if {_reel1} is 5:
+								set {_item1} to emerald
+							if {_reel1} is 6:
+								set {_item1} to netherite ingot
+
+							#リール2の設定
+							if {_reel2} is 1:
+								set {_item2} to amethyst shard
+							if {_reel2} is 2:
+								set {_item2} to lapis lazuli
+							if {_reel2} is 3:
+								set {_item2} to gold ingot
+							if {_reel2} is 4:
+								set {_item2} to diamond
+							if {_reel2} is 5:
+								set {_item2} to emerald
+							if {_reel2} is 6:
+								set {_item2} to netherite ingot
+
+							#リール3の設定
+							if {_reel3} is 1:
+								set {_item3} to amethyst shard
+							if {_reel3} is 2:
+								set {_item3} to lapis lazuli
+							if {_reel3} is 3:
+								set {_item3} to gold ingot
+							if {_reel3} is 4:
+								set {_item3} to diamond
+							if {_reel3} is 5:
+								set {_item3} to emerald
+							if {_reel3} is 6:
+								set {_item3} to netherite ingot
+
+							set slot 2 of {_inv} to {_item1}
+							set slot 4 of {_inv} to {_item2}
+							set slot 6 of {_inv} to {_item3}
+							play sound "block.large_amethyst_bud.place" to player
+							wait 1 tick
+						play sound "block.note_block.bass" to player
+							
+						loop 10 times:
+							set {_reel2} to a random integer between 1 and 6
+							set {_reel3} to a random integer between 1 and 6
+							#リール2の設定
+							if {_reel2} is 1:
+								set {_item2} to amethyst shard
+							if {_reel2} is 2:
+								set {_item2} to lapis lazuli
+							if {_reel2} is 3:
+								set {_item2} to gold ingot
+							if {_reel2} is 4:
+								set {_item2} to diamond
+							if {_reel2} is 5:
+								set {_item2} to emerald
+							if {_reel2} is 6:
+								set {_item2} to netherite ingot
+							#リール3の設定
+							if {_reel3} is 1:
+								set {_item3} to amethyst shard
+							if {_reel3} is 2:
+								set {_item3} to lapis lazuli
+							if {_reel3} is 3:
+								set {_item3} to gold ingot
+							if {_reel3} is 4:
+								set {_item3} to diamond
+							if {_reel3} is 5:
+								set {_item3} to emerald
+							if {_reel3} is 6:
+								set {_item3} to netherite ingot
+							set slot 4 of {_inv} to {_item2}
+							set slot 6 of {_inv} to {_item3}
+							play sound "block.large_amethyst_bud.place" to player
+							wait 1 tick
+						play sound "block.note_block.bass" to player
+						
+						loop 10 times:
+							set {_reel3} to a random integer between 1 and 6
+							#リール3の設定
+							if {_reel3} is 1:
+								set {_item3} to amethyst shard
+							if {_reel3} is 2:
+								set {_item3} to lapis lazuli
+							if {_reel3} is 3:
+								set {_item3} to gold ingot
+							if {_reel3} is 4:
+								set {_item3} to diamond
+							if {_reel3} is 5:
+								set {_item3} to emerald
+							if {_reel3} is 6:
+								set {_item3} to netherite ingot
+							set slot 6 of {_inv} to {_item3}
+							play sound "block.large_amethyst_bud.place" to player
+							wait 1 tick
+					set line 4 of block to "&a&l&nクリックで回す！"
+					if {_reel1} is {_reel2}:
+						if {_reel1} is {_reel3}:
+							add 30000 to player's money
+							set {slot.play.%player%} to false
+							add 1 to {jewelry-atari.%player's uuid%}
+							play sound "entity.player.levelup" to player
+							play sound "ui.toast.challenge_complete" to player
+							command "/discordsrv bcast > [SLOT] **__%player%__**さんが、**宝石スロット**で勝利し、**__30,000円__**を受け取りました！"
+							broadcast "%{slotprefix}% &b&l%player%&aさんが、&c&l宝&6&l石&e&lス&a&lロ&b&lッ&5&lト&aで勝利し、&e&l&n30,000円&aを受け取りました！"
+							wait 1 second
+							set {slot.play.%player%} to false
+							close player's inventory
+							stop
+
+						else:
+							play sound "block.note_block.bass" to player
+							send "%{slotprefix}% &c残念！外れです！"
+							wait 1 second
+							set {slot.play.%player%} to false
+							close player's inventory
+							stop
+
+					else:
+						play sound "block.note_block.bass" to player
+						send "%{slotprefix}% &c残念！外れです！"
+						wait 1 second
+						set {slot.play.%player%} to false
+						close player's inventory
+						stop
+				
+			if {slot.play.%player%} is true:
+				send "%{slotprefix}% &cスロットプレイ中はほかのスロットを回すことはできません！"
+				stop
+			
+		if line 4 of block is "&cプレイ中…":
+			send "%{slotprefix}% &c現在スロットが回っています！"
+			stop
+
+
+
+on inventory click:
+	if name of player's current inventory contain "&c&l宝&6&l石&e&lス&a&lロ&b&lッ&5&lト":
+		cancel event
+#宝石スロット=========================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#木材スロット=========================================================================================
+on sign change:
+	player has permission "casino.slots"
+	if line 1 of block is "[planks-slot]":
+		set line 1 of block to "&7-&6木材スロット&7-"
+		set line 2 of block to "&e&l&n1回100円"
+		set line 4 of block to "&a&l&nクリックで回す！"
+
+on right click on sign:
+	if line 1 of block is "&7-&6木材スロット&7-":
+		if line 2 of block is "&e&l&n1回100円":
+			if line 4 of block is "&a&l&nクリックで回す！":
+				if {slot.play.%player%} is false:
+					if player's money is less than 100:
+						send "%{slotprefix}% &cスロットを回すには100円必要です！"
+						stop
+					else:
+						send "%{slotprefix}% &e&l&n100円&a払いました。"
+						set {slot.play.%player%} to true
+						remove 100 from player's money
+						set line 4 of block to "&cプレイ中…"
+						set {_inv} to chest with 1 row named "&6&l木材スロット"
+						open {_inv} to player
+						set slot 0 of {_inv} to orange stained glass pane named " "
+						set slot 1 of {_inv} to orange stained glass pane named " "
+						set slot 3 of {_inv} to orange stained glass pane named " "
+						set slot 5 of {_inv} to orange stained glass pane named " "
+						set slot 7 of {_inv} to orange stained glass pane named " "
+						set slot 8 of {_inv} to orange stained glass pane named " "
+						loop 40 times:
+							set {_reel1} to a random integer between 1 and 7
+							set {_reel2} to a random integer between 1 and 7
+							set {_reel3} to a random integer between 1 and 7
+							#リール1の設定
+							if {_reel1} is 1:
+								set {_item1} to bowl
+							if {_reel1} is 2:
+								set {_item1} to string
+							if {_reel1} is 3:
+								set {_item1} to feather
+							if {_reel1} is 4:
+								set {_item1} to stick
+							if {_reel1} is 5:
+								set {_item1} to cobweb
+							if {_reel1} is 6:
+								set {_item1} to bone
+							if {_reel1} is 7:
+								set {_item1} to dead bush
+
+								#リール2の設定
+							if {_reel2} is 1:
+								set {_item2} to bowl
+							if {_reel2} is 2:
+								set {_item2} to string
+							if {_reel2} is 3:
+								set {_item2} to feather
+							if {_reel2} is 4:
+								set {_item2} to stick
+							if {_reel2} is 5:
+								set {_item2} to cobweb
+							if {_reel2} is 6:
+								set {_item2} to bone
+							if {_reel2} is 7:
+								set {_item2} to dead bush
+
+								#リール3の設定
+							if {_reel3} is 1:
+								set {_item3} to bowl
+							if {_reel3} is 2:
+								set {_item3} to string
+							if {_reel3} is 3:
+								set {_item3} to feather
+							if {_reel3} is 4:
+								set {_item3} to stick
+							if {_reel3} is 5:
+								set {_item3} to cobweb
+							if {_reel3} is 6:
+								set {_item3} to bone
+							if {_reel3} is 7:
+								set {_item3} to dead bush
+
+							set slot 2 of {_inv} to {_item1}
+							set slot 4 of {_inv} to {_item2}
+							set slot 6 of {_inv} to {_item3}
+							play sound "block.lever.click" to player
+							wait 1 tick
+						play sound "block.note_block.bass" to player
+					
+						loop 10 times:
+							set {_reel2} to a random integer between 1 and 7
+							set {_reel3} to a random integer between 1 and 7
+							#リール2の設定
+							if {_reel2} is 1:
+								set {_item2} to bowl
+							if {_reel2} is 2:
+								set {_item2} to string
+							if {_reel2} is 3:
+								set {_item2} to feather
+							if {_reel2} is 4:
+								set {_item2} to stick
+							if {_reel2} is 5:
+								set {_item2} to cobweb
+							if {_reel2} is 6:
+								set {_item2} to bone
+							if {_reel2} is 7:
+								set {_item2} to dead bush
+
+								#リール3の設定
+							if {_reel3} is 1:
+								set {_item3} to bowl
+							if {_reel3} is 2:
+								set {_item3} to string
+							if {_reel3} is 3:
+								set {_item3} to feather
+							if {_reel3} is 4:
+								set {_item3} to stick
+							if {_reel3} is 5:
+								set {_item3} to cobweb
+							if {_reel3} is 6:
+								set {_item3} to bone
+							if {_reel3} is 7:
+								set {_item3} to dead bush
+							set slot 4 of {_inv} to {_item2}
+							set slot 6 of {_inv} to {_item3}
+							play sound "block.lever.click" to player
+							wait 1 tick
+						play sound "block.note_block.bass" to player
+						
+						loop 10 times:
+							set {_reel3} to a random integer between 1 and 7
+							#リール3の設定
+							if {_reel3} is 1:
+								set {_item3} to bowl
+							if {_reel3} is 2:
+								set {_item3} to string
+							if {_reel3} is 3:
+								set {_item3} to feather
+							if {_reel3} is 4:
+								set {_item3} to stick
+							if {_reel3} is 5:
+								set {_item3} to cobweb
+							if {_reel3} is 6:
+								set {_item3} to bone
+							if {_reel3} is 7:
+								set {_item3} to dead bush
+							set slot 6 of {_inv} to {_item3}
+							play sound "block.lever.click" to player
+							wait 1 tick
+					set line 4 of block to "&a&l&nクリックで回す！"
+					if {_reel1} is {_reel2}:
+						if {_reel1} is {_reel3}:
+							add 3000 to player's money
+							set {slot.play.%player%} to false
+							add 1 to {planks-atari.%player's uuid%}
+							play sound "entity.player.levelup" to player
+							play sound "ui.toast.challenge_complete" to player
+							command "/discordsrv bcast > [SLOT] **__%player%__**さんが、**木材スロット**で勝利し、**__3,000円__**を受け取りました！"
+							broadcast "%{slotprefix}% &b&l%player%&aさんが、&6&l木材スロット&aで勝利し、&e&l&n3,000円&aを受け取りました！"
+							wait 1 second
+							set {slot.play.%player%} to false
+							close player's inventory
+							stop
+
+						else:
+							play sound "block.note_block.bass" to player
+							send "%{slotprefix}% &c残念！外れです！"
+							wait 1 second
+							set {slot.play.%player%} to false
+							close player's inventory
+							stop
+
+					else:
+						play sound "block.note_block.bass" to player
+						send "%{slotprefix}% &c残念！外れです！"
+						wait 1 second
+						set {slot.play.%player%} to false
+						close player's inventory
+						stop
+				
+			if {slot.play.%player%} is true:
+				send "%{slotprefix}% &cスロットプレイ中はほかのスロットを回すことはできません！"
+				stop
+			
+		if line 4 of block is "&cプレイ中…":
+			send "%{slotprefix}% &c現在スロットが回っています！"
+			stop
+
+
+
+on inventory click:
+	if name of player's current inventory contain "&6&l木材スロット":
+		cancel event
+#木材スロット=========================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#ネザースロット=========================================================================================
+command /selectnetherslotitemframe1:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe1} to true
+		send "&aselectnetherslotitemframe1 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe2:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe2} to true
+		send "&aselectnetherslotitemframe2 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe3:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe3} to true
+		send "&aselectnetherslotitemframe3 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe4:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe4} to true
+		send "&aselectnetherslotitemframe4 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe5:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe5} to true
+		send "&aselectnetherslotitemframe5 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe6:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe6} to true
+		send "&aselectnetherslotitemframe6 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe7:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe7} to true
+		send "&aselectnetherslotitemframe7 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe8:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe8} to true
+		send "&aselectnetherslotitemframe8 mode was turned on."
+		stop
+
+command /selectnetherslotitemframe9:
+	permission: admin
+	trigger:
+		set {selectnetherslotitemframe9} to true
+		send "&aselectnetherslotitemframe9 mode was turned on."
+		stop
+
+command /selectnetherslotlever:
+	permission: admin
+	trigger:
+		set {selectnetherslotlever} to true
+		send "selectnetherslotlever mode was turned on."
+		stop
+
+on right click on entity:
+	if {selectnetherslotitemframe1} is true:
+		set {netherslotitemframe1} to event-entity
+		set {netherslotitemframe1.location} to event-entity's location
+		send "&dset netherslotitemframe1 was successfully."
+		set {selectnetherslotitemframe1} to false
+		stop
+	if {selectnetherslotitemframe2} is true:
+		set {netherslotitemframe2} to event-entity
+		set {netherslotitemframe2.location} to event-entity's location
+		send "&dset netherslotitemframe2 was successfully."
+		set {selectnetherslotitemframe2} to false
+		stop
+	if {selectnetherslotitemframe3} is true:
+		set {netherslotitemframe3} to event-entity
+		set {netherslotitemframe3.location} to event-entity's location
+		send "&dset netherslotitemframe3 was successfully."
+		set {selectnetherslotitemframe3} to false
+		stop
+	if {selectnetherslotitemframe4} is true:
+		set {netherslotitemframe4} to event-entity
+		set {netherslotitemframe4.location} to event-entity's location
+		send "&dset netherslotitemframe4 was successfully."
+		set {selectnetherslotitemframe4} to false
+		stop
+	if {selectnetherslotitemframe5} is true:
+		set {netherslotitemframe5} to event-entity
+		set {netherslotitemframe5.location} to event-entity's location
+		send "&dset netherslotitemframe5 was successfully."
+		set {selectnetherslotitemframe5} to false
+		stop
+	if {selectnetherslotitemframe6} is true:
+		set {netherslotitemframe6} to event-entity
+		set {netherslotitemframe6.location} to event-entity's location
+		send "&dset netherslotitemframe6 was successfully."
+		set {selectnetherslotitemframe6} to false
+		stop
+	if {selectnetherslotitemframe7} is true:
+		set {netherslotitemframe7} to event-entity
+		set {netherslotitemframe7.location} to event-entity's location
+		send "&dset netherslotitemframe7 was successfully."
+		set {selectnetherslotitemframe7} to false
+		stop
+	if {selectnetherslotitemframe8} is true:
+		set {netherslotitemframe8} to event-entity
+		set {netherslotitemframe8.location} to event-entity's location
+		send "&dset netherslotitemframe8 was successfully."
+		set {selectnetherslotitemframe8} to false
+		stop
+	if {selectnetherslotitemframe9} is true:
+		set {netherslotitemframe9} to event-entity
+		set {netherslotitemframe9.location} to event-entity's location
+		send "&dset netherslotitemframe9 was successfully."
+		set {selectnetherslotitemframe9} to false
+		stop
+
+Variables:
+	{netherslot.play} = false
+
+on right click:
+	if {selectnetherslotlever} is true:
+		set {netherslotlever} to event-block
+		set {selectnetherslotlever} to false
+		stop
+	
+	#レバーで開始する処理
+	if event-block is {netherslotlever}:
+		if {netherslot.play} is false:
+			if {slot.play.%player%} is false:	
+				if player's money is less than 10000:
+					cancel event
+					send "%{slotprefix}% &cスロットを回すには10,000円必要です！"
+					stop
+				else:
+					cancel event
+					send "%{slotprefix}% &e&l&n10,000円&a払いました。"
+					set {slot.play.%player%} to true
+					set {netherslot.play} to true
+					remove 10000 from player's money
+					loop 20 times:
+						set {_nreel1} to random integer between 1 and 8
+						set {_nreel2} to random integer between 1 and 8
+						set {_nreel3} to random integer between 1 and 8
+						set {_nreel4} to random integer between 1 and 8
+						set {_nreel5} to random integer between 1 and 8
+						set {_nreel6} to random integer between 1 and 8
+						set {_nreel7} to random integer between 1 and 8
+						set {_nreel8} to random integer between 1 and 8
+						set {_nreel9} to random integer between 1 and 8
+						#リール1の設定
+						if {_nreel1} is 1:
+							set {_nitem1} to {test1}
+						if {_nreel1} is 2:
+							set {_nitem1} to {test2}
+						if {_nreel1} is 3:
+							set {_nitem1} to {test3}
+						if {_nreel1} is 4:
+							set {_nitem1} to {test4}
+						if {_nreel1} is 5:
+							set {_nitem1} to {test5}
+						if {_nreel1} is 6:
+							set {_nitem1} to {test6}
+						if {_nreel1} is 7:
+							set {_nitem1} to {test7}
+						if {_nreel1} is 8:
+							set {_nitem1} to {test8}
+						#リール2の設定
+						if {_nreel2} is 1:
+							set {_nitem2} to {test1}
+						if {_nreel2} is 2:
+							set {_nitem2} to {test2}
+						if {_nreel2} is 3:
+							set {_nitem2} to {test3}
+						if {_nreel2} is 4:
+							set {_nitem2} to {test4}
+						if {_nreel2} is 5:
+							set {_niteml2} to {test5}
+						if {_nreel2} is 6:
+							set {_nitem2} to {test6}
+						if {_nreel2} is 7:
+							set {_nitem2} to {test7}
+						if {_nreel3} is 8:
+							set {_nitem2} to {test8}
+						#リール3の設定
+						if {_nreel3} is 1:
+							set {_nitem3} to {test1}
+						if {_nreel3} is 2:
+							set {_nitem3} to {test2}
+						if {_nreel3} is 3:
+							set {_nitem3} to {test3}
+						if {_nreel3} is 4:
+							set {_nitem3} to {test4}
+						if {_nreel3} is 5:
+							set {_niteml3} to {test5}
+						if {_nreel3} is 6:
+							set {_nitem3} to {test6}
+						if {_nreel3} is 7:
+							set {_nitem3} to {test7}
+						if {_nreel3} is 8:
+							set {_nitem3} to {test8}
+						#リール4の設定
+						if {_nreel4} is 1:
+							set {_nitem4} to {test1}
+						if {_nreel4} is 2:
+							set {_nitem4} to {test2}
+						if {_nreel4} is 3:
+							set {_nitem4} to {test3}
+						if {_nreel4} is 4:
+							set {_nitem4} to {test4}
+						if {_nreel4} is 5:
+							set {_niteml4} to {test5}
+						if {_nreel4} is 6:
+							set {_nitem4} to {test6}
+						if {_nreel4} is 7:
+							set {_nitem4} to {test7}
+						if {_nreel4} is 8:
+							set {_nitem4} to {test8}
+						#リール5の設定
+						if {_nreel5} is 1:
+							set {_nitem5} to {test1}
+						if {_nreel5} is 2:
+							set {_nitem5} to {test2}
+						if {_nreel5} is 3:
+							set {_nitem5} to {test3}
+						if {_nreel5} is 4:
+							set {_nitem5} to {test4}
+						if {_nreel5} is 5:
+							set {_niteml5} to {test5}
+						if {_nreel5} is 6:
+							set {_nitem5} to {test6}
+						if {_nreel5} is 7:
+							set {_nitem5} to {test7}
+						if {_nreel5} is 8:
+							set {_nitem5} to {test8}
+						#リール6の設定
+						if {_nreel6} is 1:
+							set {_nitem6} to {test1}
+						if {_nreel6} is 2:
+							set {_nitem6} to {test2}
+						if {_nreel6} is 3:
+							set {_nitem6} to {test3}
+						if {_nreel6} is 4:
+							set {_nitem6} to {test4}
+						if {_nreel6} is 5:
+							set {_niteml6} to {test5}
+						if {_nreel6} is 6:
+							set {_nitem6} to {test6}
+						if {_nreel6} is 7:
+							set {_nitem6} to {test7}
+						if {_nreel6} is 8:
+							set {_nitem6} to {test8}
+						#リール7の設定
+						if {_nreel7} is 1:
+							set {_nitem7} to {test1}
+						if {_nreel7} is 2:
+							set {_nitem7} to {test2}
+						if {_nreel7} is 3:
+							set {_nitem7} to {test3}
+						if {_nreel7} is 4:
+							set {_nitem7} to {test4}
+						if {_nreel7} is 5:
+							set {_nitem7} to {test5}
+						if {_nreel7} is 6:
+							set {_nitem7} to {test6}
+						if {_nreel7} is 7:
+							set {_nitem7} to {test7}
+						if {_nreel7} is 8:
+							set {_nitem7} to {test8}
+						#リール8の設定
+						if {_nreel8} is 1:
+							set {_nitem8} to {test1}
+						if {_nreel8} is 2:
+							set {_nitem8} to {test2}
+						if {_nreel8} is 3:
+							set {_nitem8} to {test3}
+						if {_nreel8} is 4:
+							set {_nitem8} to {test4}
+						if {_nreel8} is 5:
+							set {_nitem82} to {test5}
+						if {_nreel8} is 6:
+							set {_nitem8} to {test6}
+						if {_nreel8} is 7:
+							set {_nitem8} to {test7}
+						if {_nreel8} is 8:
+							set {_nitem8} to {test8}
+						#リール9の設定
+						if {_nreel9} is 1:
+							set {_nitem9} to {test1}
+						if {_nreel9} is 2:
+							set {_nitem9} to {test2}
+						if {_nreel9} is 3:
+							set {_nitem9} to {test3}
+						if {_nreel9} is 4:
+							set {_nitem9} to {test4}
+						if {_nreel9} is 5:
+							set {_nitem92} to {test5}
+						if {_nreel9} is 6:
+							set {_nitem9} to {test6}
+						if {_nreel9} is 7:
+							set {_nitem9} to {test7}
+						if {_nreel9} is 8:
+							set {_nitem9} to {test8}
+						
+						#額縁にアイテムセット
+						set item of {netherslotitemframe1} to {_nitem1}
+						set item of {netherslotitemframe2} to {_nitem2}
+						set item of {netherslotitemframe3} to {_nitem3}
+						set item of {netherslotitemframe4} to {_nitem4}
+						set item of {netherslotitemframe5} to {_nitem5}
+						set item of {netherslotitemframe6} to {_nitem6}
+						set item of {netherslotitemframe7} to {_nitem7}
+						set item of {netherslotitemframe8} to {_nitem8}
+						set item of {netherslotitemframe9} to {_nitem9}
+						wait 0.1 seconds
+					play sound "entity.wither.spawn" to player
+					
+					loop 8 times:
+						set {_nreel2} to random integer between 1 and 8
+						set {_nreel3} to random integer between 1 and 8
+						set {_nreel5} to random integer between 1 and 8
+						set {_nreel6} to random integer between 1 and 8
+						set {_nreel8} to random integer between 1 and 8
+						set {_nreel9} to random integer between 1 and 8
+						#リール2の設定
+						if {_nreel2} is 1:
+							set {_nitem2} to {test1}
+						if {_nreel2} is 2:
+							set {_nitem2} to {test2}
+						if {_nreel2} is 3:
+							set {_nitem2} to {test3}
+						if {_nreel2} is 4:
+							set {_nitem2} to {test4}
+						if {_nreel2} is 5:
+							set {_niteml2} to {test5}
+						if {_nreel2} is 6:
+							set {_nitem2} to {test6}
+						if {_nreel2} is 7:
+							set {_nitem2} to {test7}
+						if {_nreel3} is 8:
+							set {_nitem2} to {test8}
+						#リール3の設定
+						if {_nreel3} is 1:
+							set {_nitem3} to {test1}
+						if {_nreel3} is 2:
+							set {_nitem3} to {test2}
+						if {_nreel3} is 3:
+							set {_nitem3} to {test3}
+						if {_nreel3} is 4:
+							set {_nitem3} to {test4}
+						if {_nreel3} is 5:
+							set {_niteml3} to {test5}
+						if {_nreel3} is 6:
+							set {_nitem3} to {test6}
+						if {_nreel3} is 7:
+							set {_nitem3} to {test7}
+						if {_nreel3} is 8:
+							set {_nitem3} to {test8}
+						#リール5の設定
+						if {_nreel5} is 1:
+							set {_nitem5} to {test1}
+						if {_nreel5} is 2:
+							set {_nitem5} to {test2}
+						if {_nreel5} is 3:
+							set {_nitem5} to {test3}
+						if {_nreel5} is 4:
+							set {_nitem5} to {test4}
+						if {_nreel5} is 5:
+							set {_niteml5} to {test5}
+						if {_nreel5} is 6:
+							set {_nitem5} to {test6}
+						if {_nreel5} is 7:
+							set {_nitem5} to {test7}
+						if {_nreel5} is 8:
+							set {_nitem5} to {test8}
+						#リール6の設定
+						if {_nreel6} is 1:
+							set {_nitem6} to {test1}
+						if {_nreel6} is 2:
+							set {_nitem6} to {test2}
+						if {_nreel6} is 3:
+							set {_nitem6} to {test3}
+						if {_nreel6} is 4:
+							set {_nitem6} to {test4}
+						if {_nreel6} is 5:
+							set {_niteml6} to {test5}
+						if {_nreel6} is 6:
+							set {_nitem6} to {test6}
+						if {_nreel6} is 7:
+							set {_nitem6} to {test7}
+						if {_nreel6} is 8:
+							set {_nitem6} to {test8}
+						#リール8の設定
+						if {_nreel8} is 1:
+							set {_nitem8} to {test1}
+						if {_nreel8} is 2:
+							set {_nitem8} to {test2}
+						if {_nreel8} is 3:
+							set {_nitem8} to {test3}
+						if {_nreel8} is 4:
+							set {_nitem8} to {test4}
+						if {_nreel8} is 5:
+							set {_nitem82} to {test5}
+						if {_nreel8} is 6:
+							set {_nitem8} to {test6}
+						if {_nreel8} is 7:
+							set {_nitem8} to {test7}
+						if {_nreel8} is 8:
+							set {_nitem8} to {test8}
+						#リール9の設定
+						if {_nreel9} is 1:
+							set {_nitem9} to {test1}
+						if {_nreel9} is 2:
+							set {_nitem9} to {test2}
+						if {_nreel9} is 3:
+							set {_nitem9} to {test3}
+						if {_nreel9} is 4:
+							set {_nitem9} to {test4}
+						if {_nreel9} is 5:
+							set {_nitem92} to {test5}
+						if {_nreel9} is 6:
+							set {_nitem9} to {test6}
+						if {_nreel9} is 7:
+							set {_nitem9} to {test7}
+						if {_nreel9} is 8:
+							set {_nitem9} to {test8}
+						
+						#額縁にアイテムセット
+						set item of {netherslotitemframe2} to {_nitem2}
+						set item of {netherslotitemframe3} to {_nitem3}
+						set item of {netherslotitemframe5} to {_nitem5}
+						set item of {netherslotitemframe6} to {_nitem6}
+						set item of {netherslotitemframe8} to {_nitem8}
+						set item of {netherslotitemframe9} to {_nitem9}
+						wait 0.1 seconds
+					play sound "entity.wither.spawn" to player
+					
+					loop 8 times:
+						set {_nreel3} to random integer between 1 and 8
+						set {_nreel6} to random integer between 1 and 8
+						set {_nreel9} to random integer between 1 and 8
+						#リール3の設定
+						if {_nreel3} is 1:
+							set {_nitem3} to {test1}
+						if {_nreel3} is 2:
+							set {_nitem3} to {test2}
+						if {_nreel3} is 3:
+							set {_nitem3} to {test3}
+						if {_nreel3} is 4:
+							set {_nitem3} to {test4}
+						if {_nreel3} is 5:
+							set {_niteml3} to {test5}
+						if {_nreel3} is 6:
+							set {_nitem3} to {test6}
+						if {_nreel3} is 7:
+							set {_nitem3} to {test7}
+						if {_nreel3} is 8:
+							set {_nitem3} to {test8}
+						#リール6の設定
+						if {_nreel6} is 1:
+							set {_nitem6} to {test1}
+						if {_nreel6} is 2:
+							set {_nitem6} to {test2}
+						if {_nreel6} is 3:
+							set {_nitem6} to {test3}
+						if {_nreel6} is 4:
+							set {_nitem6} to {test4}
+						if {_nreel6} is 5:
+							set {_niteml6} to {test5}
+						if {_nreel6} is 6:
+							set {_nitem6} to {test6}
+						if {_nreel6} is 7:
+							set {_nitem6} to {test7}
+						if {_nreel6} is 8:
+							set {_nitem6} to {test8}
+						#リール9の設定
+						if {_nreel9} is 1:
+							set {_nitem9} to {test1}
+						if {_nreel9} is 2:
+							set {_nitem9} to {test2}
+						if {_nreel9} is 3:
+							set {_nitem9} to {test3}
+						if {_nreel9} is 4:
+							set {_nitem9} to {test4}
+						if {_nreel9} is 5:
+							set {_nitem92} to {test5}
+						if {_nreel9} is 6:
+							set {_nitem9} to {test6}
+						if {_nreel9} is 7:
+							set {_nitem9} to {test7}
+						if {_nreel9} is 8:
+							set {_nitem9} to {test8}
+						
+						#額縁にアイテムセット
+						set item of {netherslotitemframe3} to {_nitem3}
+						set item of {netherslotitemframe6} to {_nitem6}
+						set item of {netherslotitemframe9} to {_nitem9}
+						wait 0.1 seconds
+					play sound "entity.wither.spawn" to player
+						
+						
+					#当たりの処理
+					#一直線揃い
+					if {_nitem4} is {_nitem5}:
+						if {_nitem4} is {_nitem6}:
+							add 500000 to player's money
+							add 1 to {nether-atari.%player's uuid%}
+							play sound "entity.player.levelup" to player
+							play sound "ui.toast.challenge_complete" to player
+							play sound "entity.ender_dragon.ambient" to player
+							send title "&0&l&ko&5&lネザースロット&0&l&ko &c&l勝利！" to player
+							command "/discordsrv bcast > [SLOT] **__%player%__**さんが、**ネザースロット**で勝利し、**__500,000円__**を受け取りました！"
+							broadcast "%{slotprefix}% &b&l%player%&aさんが、&0&l&ko&5&lネザースロット&0&l&ko&aで勝利し、&e&l&n500,000円&aを受け取りました！"
+							give enchanted book named "&0&l&ko&5&l悪魔の本&0&l&ko" with lore "&dネザースロットで勝利したもののみに与えられる" and "&d悪魔の邪念が詰まった本。" to player
+							set {netherslot.play} to false
+							set {slot.play.%player%} to false
+							stop
+						
+						else:
+							cancel event
+							play sound "block.note_block.bass" to player
+							send "%{slotprefix}% &c残念！外れです！"
+							wait 1 second
+							set {netherslot.play} to false
+							set {slot.play.%player%} to false
+							stop
+							
+					
+					else:
+						cancel event
+						play sound "block.note_block.bass" to player
+						send "%{slotprefix}% &c残念！外れです！"
+						wait 1 second
+						set {netherslot.play} to false
+						set {slot.play.%player%} to false
+						stop
+				
+			if {slot.play.%player%} is true:
+				send "%{slotprefix}% &cスロットプレイ中はほかのスロットを回すことはできません！"
+				cancel event
+				stop
+				
+		if {netherslot.play} is true:
+			cancel event
+			send "%{slotprefix}% &c現在スロットが回っています！"
+			stop
+
+
+#ネザースロット=========================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#エンジェルスロット=====================================================================
+command /selectangelslotitemframe1:
+	permission: admin
+	trigger:
+		set {selectangelslotitemframe1} to true
+		send "&aselectangelslotitemframe1 mode was turned on."
+		stop
+
+command /selectangelslotitemframe2:
+	permission: admin
+	trigger:
+		set {selectangelslotitemframe2} to true
+		send "&aselectangelslotitemframe2 mode was turned on."
+		stop
+
+command /selectangelslotitemframe3:
+	permission: admin
+	trigger:
+		set {selectangelslotitemframe3} to true
+		send "&aselectangelslotitemframe3 mode was turned on."
+		stop
+
+command /selectangelslotitemframe4:
+	permission: admin
+	trigger:
+		set {selectangelslotitemframe4} to true
+		send "&aselectangelslotitemframe4 mode was turned on."
+		stop
+
+command /selectangelslotitemframe5:
+	permission: admin
+	trigger:
+		set {selectangelslotitemframe5} to true
+		send "&aselectangelslotitemframe5 mode was turned on."
+		stop
+
+command /selectangelslotitemframe6:
+	permission: admin
+	trigger:
+		set {selectangelslotitemframe6} to true
+		send "&aselectangelslotitemframe6 mode was turned on."
+		stop
+
+command /selectangelslotitemframe7:
+	permission: admin
+	trigger:
+		set {selectangelslotitemframe7} to true
+		send "&aselectangelslotitemframe7 mode was turned on."
+		stop
+
+command /selectangelslotitemframe8:
+	permission: admin
+	trigger:
+		set {selectangelslotitemframe8} to true
+		send "&aselectangelslotitemframe8 mode was turned on."
+		stop
+
+command /selectangelslotitemframe9:
+	permission: admin
+	trigger:
+		set {selectangelslotitemframe9} to true
+		send "&aselectangelslotitemframe9 mode was turned on."
+		stop
+
+command /selectangelslotlever:
+	permission: admin
+	trigger:
+		set {selectangelslotlever} to true
+		send "selectangelslotlever mode was turned on."
+		stop
+
+command /selectangelslotpotsign:
+	permission: admin
+	trigger:
+		set {selectangelslotpotsign} to true
+		stop
+
+on right click on entity:
+	if {selectangelslotitemframe1} is true:
+		set {angelslotitemframe1} to event-entity
+		set {angelslotitemframe1.location} to event-entity's location
+		send "&dset angelslotitemframe1 was successfully."
+		set {selectangelslotitemframe1} to false
+		stop
+	if {selectangelslotitemframe2} is true:
+		set {angelslotitemframe2} to event-entity
+		set {angelslotitemframe2.location} to event-entity's location
+		send "&dset angelslotitemframe2 was successfully."
+		set {selectangelslotitemframe2} to false
+		stop
+	if {selectangelslotitemframe3} is true:
+		set {angelslotitemframe3} to event-entity
+		set {angelslotitemframe3.location} to event-entity's location
+		send "&dset angelslotitemframe3 was successfully."
+		set {selectangelslotitemframe3} to false
+		stop
+	if {selectangelslotitemframe4} is true:
+		set {angelslotitemframe4} to event-entity
+		set {angelslotitemframe4.location} to event-entity's location
+		send "&dset angelslotitemframe4 was successfully."
+		set {selectangelslotitemframe4} to false
+		stop
+	if {selectangelslotitemframe5} is true:
+		set {angelslotitemframe5} to event-entity
+		set {angelslotitemframe5.location} to event-entity's location
+		send "&dset angelslotitemframe5 was successfully."
+		set {selectangelslotitemframe5} to false
+		stop
+	if {selectangelslotitemframe6} is true:
+		set {angelslotitemframe6} to event-entity
+		set {angelslotitemframe6.location} to event-entity's location
+		send "&dset angelslotitemframe6 was successfully."
+		set {selectangelslotitemframe6} to false
+		stop
+	if {selectangelslotitemframe7} is true:
+		set {angelslotitemframe7} to event-entity
+		set {angelslotitemframe7.location} to event-entity's location
+		send "&dset angelslotitemframe7 was successfully."
+		set {selectangelslotitemframe7} to false
+		stop
+	if {selectangelslotitemframe8} is true:
+		set {angelslotitemframe8} to event-entity
+		set {angelslotitemframe8.location} to event-entity's location
+		send "&dset angelslotitemframe8 was successfully."
+		set {selectangelslotitemframe8} to false
+		stop
+	if {selectangelslotitemframe9} is true:
+		set {angelslotitemframe9} to event-entity
+		set {angelslotitemframe9.location} to event-entity's location
+		send "&dset angelslotitemframe9 was successfully."
+		set {selectangelslotitemframe9} to false
+		stop
+
+Variables:
+	{angelslot.play} = false
+	{angelslot.pot} = 0
+
+
+on sign change:
+	player has permission "casino.slots"
+	if line 1 of block is "[angel-pot]":
+		set line 1 of block to "&f========================"
+		set line 2 of block to "&dPOT: &a%{angelslot.pot}%円"
+		set {angelslot.jackpot} to 500000 + {angelslot.pot}
+		set line 3 of block to "&d報酬: &a%{angelslot.jackpot}%円"
+		set line 4 of block to "&f========================"
+
+on right click:
+	if {selectangelslotlever} is true:
+		set {angelslotlever} to event-block
+		set {selectangelslotlever} to false
+		stop
+	
+	if {selectangelslotpotsign} is true:
+		set {angelslotpotsign} to event-block
+		set {selectangelslotpotsign} to false
+		stop
+	
+	#レバーで開始する処理
+	if event-block is {angelslotlever}:
+		if {angelslot.play} is false:
+			if {slot.play.%player%} is false:	
+				if player's money is less than 10000:
+					cancel event
+					send "%{slotprefix}% &cスロットを回すには10,000円必要です！"
+					stop
+				else:
+					cancel event
+					send "%{slotprefix}% &e&l&n10,000円&a払いました。"
+					add 1000 to {angelslot.pot}
+					set line 2 of {angelslotpotsign} to "&dPOT: &a%{angelslot.pot}%円"
+					set {angelslot.jackpot} to 500000 + {angelslot.pot}
+					set line 3 of {angelslotpotsign} to "&d報酬: &a%{angelslot.jackpot}%円"
+					set {slot.play.%player%} to true
+					set {angelslot.play} to true
+					remove 10000 from player's money
+					loop 20 times:
+						set {_areel1} to random integer between 1 and 8
+						set {_areel2} to random integer between 1 and 8
+						set {_areel3} to random integer between 1 and 8
+						set {_areel4} to random integer between 1 and 8
+						set {_areel5} to random integer between 1 and 8
+						set {_areel6} to random integer between 1 and 8
+						set {_areel7} to random integer between 1 and 8
+						set {_areel8} to random integer between 1 and 8
+						set {_areel9} to random integer between 1 and 8
+						#リール1の設定
+						if {_areel1} is 1:
+							set {_aitem1} to {test1_a}
+						if {_areel1} is 2:
+							set {_aitem1} to {test2_a}
+						if {_areel1} is 3:
+							set {_aitem1} to {test3_a}
+						if {_areel1} is 4:
+							set {_aitem1} to {test4_a}
+						if {_areel1} is 5:
+							set {_aitem1} to {test5_a}
+						if {_areel1} is 6:
+							set {_aitem1} to {test6_a}
+						if {_areel1} is 7:
+							set {_aitem1} to {test7_a}
+						if {_areel1} is 8:
+							set {_aitem1} to {test8_a}
+						#リール2の設定
+						if {_areel2} is 1:
+							set {_aitem2} to {test1_a}
+						if {_areel2} is 2:
+							set {_aitem2} to {test2_a}
+						if {_areel2} is 3:
+							set {_aitem2} to {test3_a}
+						if {_areel2} is 4:
+							set {_aitem2} to {test4_a}
+						if {_areel2} is 5:
+							set {_aiteml2} to {test5_a}
+						if {_areel2} is 6:
+							set {_aitem2} to {test6_a}
+						if {_areel2} is 7:
+							set {_aitem2} to {test7_a}
+						if {_areel3} is 8:
+							set {_aitem2} to {test8_a}
+						#リール3の設定
+						if {_areel3} is 1:
+							set {_aitem3} to {test1_a}
+						if {_areel3} is 2:
+							set {_aitem3} to {test2_a}
+						if {_areel3} is 3:
+							set {_aitem3} to {test3_a}
+						if {_areel3} is 4:
+							set {_aitem3} to {test4_a}
+						if {_areel3} is 5:
+							set {_aiteml3} to {test5_a}
+						if {_areel3} is 6:
+							set {_aitem3} to {test6_a}
+						if {_areel3} is 7:
+							set {_aitem3} to {test7_a}
+						if {_areel3} is 8:
+							set {_aitem3} to {test8_a}
+						#リール4の設定
+						if {_areel4} is 1:
+							set {_aitem4} to {test1_a}
+						if {_areel4} is 2:
+							set {_aitem4} to {test2_a}
+						if {_areel4} is 3:
+							set {_aitem4} to {test3_a}
+						if {_areel4} is 4:
+							set {_aitem4} to {test4_a}
+						if {_areel4} is 5:
+							set {_aiteml4} to {test5_a}
+						if {_areel4} is 6:
+							set {_aitem4} to {test6_a}
+						if {_areel4} is 7:
+							set {_aitem4} to {test7_a}
+						if {_areel4} is 8:
+							set {_aitem4} to {test8_a}
+						#リール5の設定
+						if {_areel5} is 1:
+							set {_aitem5} to {test1_a}
+						if {_areel5} is 2:
+							set {_aitem5} to {test2_a}
+						if {_areel5} is 3:
+							set {_aitem5} to {test3_a}
+						if {_areel5} is 4:
+							set {_aitem5} to {test4_a}
+						if {_areel5} is 5:
+							set {_aiteml5} to {test5_a}
+						if {_areel5} is 6:
+							set {_aitem5} to {test6_a}
+						if {_areel5} is 7:
+							set {_aitem5} to {test7_a}
+						if {_areel5} is 8:
+							set {_aitem5} to {test8_a}
+						#リール6の設定
+						if {_areel6} is 1:
+							set {_aitem6} to {test1_a}
+						if {_areel6} is 2:
+							set {_aitem6} to {test2_a}
+						if {_areel6} is 3:
+							set {_aitem6} to {test3_a}
+						if {_areel6} is 4:
+							set {_aitem6} to {test4_a}
+						if {_areel6} is 5:
+							set {_aiteml6} to {test5_a}
+						if {_areel6} is 6:
+							set {_aitem6} to {test6_a}
+						if {_areel6} is 7:
+							set {_aitem6} to {test7_a}
+						if {_areel6} is 8:
+							set {_aitem6} to {test8_a}
+						#リール7の設定
+						if {_areel7} is 1:
+							set {_aitem7} to {test1_a}
+						if {_areel7} is 2:
+							set {_aitem7} to {test2_a}
+						if {_areel7} is 3:
+							set {_aitem7} to {test3_a}
+						if {_areel7} is 4:
+							set {_aitem7} to {test4_a}
+						if {_areel7} is 5:
+							set {_aitem7} to {test5_a}
+						if {_areel7} is 6:
+							set {_aitem7} to {test6_a}
+						if {_areel7} is 7:
+							set {_aitem7} to {test7_a}
+						if {_areel7} is 8:
+							set {_aitem7} to {test8_a}
+						#リール8の設定
+						if {_areel8} is 1:
+							set {_aitem8} to {test1_a}
+						if {_areel8} is 2:
+							set {_aitem8} to {test2_a}
+						if {_areel8} is 3:
+							set {_aitem8} to {test3_a}
+						if {_areel8} is 4:
+							set {_aitem8} to {test4_a}
+						if {_areel8} is 5:
+							set {_aitem8} to {test5_a}
+						if {_areel8} is 6:
+							set {_aitem8} to {test6_a}
+						if {_areel8} is 7:
+							set {_aitem8} to {test7_a}
+						if {_areel8} is 8:
+							set {_aitem8} to {test8_a}
+						#リール9の設定
+						if {_areel9} is 1:
+							set {_aitem9} to {test1_a}
+						if {_areel9} is 2:
+							set {_aitem9} to {test2_a}
+						if {_areel9} is 3:
+							set {_aitem9} to {test3_a}
+						if {_areel9} is 4:
+							set {_aitem9} to {test4_a}
+						if {_areel9} is 5:
+							set {_aitem9} to {test5_a}
+						if {_areel9} is 6:
+							set {_aitem9} to {test6_a}
+						if {_areel9} is 7:
+							set {_aitem9} to {test7_a}
+						if {_areel9} is 8:
+							set {_aitem9} to {test8_a}
+						
+						#額縁にアイテムセット
+						set item of {angelslotitemframe1} to {_aitem1}
+						set item of {angelslotitemframe2} to {_aitem2}
+						set item of {angelslotitemframe3} to {_aitem3}
+						set item of {angelslotitemframe4} to {_aitem4}
+						set item of {angelslotitemframe5} to {_aitem5}
+						set item of {angelslotitemframe6} to {_aitem6}
+						set item of {angelslotitemframe7} to {_aitem7}
+						set item of {angelslotitemframe8} to {_aitem8}
+						set item of {angelslotitemframe9} to {_aitem9}
+						wait 0.1 seconds
+					play sound "block.beacon.activate" with volume 30 and pitch 1.5 to player
+					play sound "block.end_portal_frame.fill" with volume 30 to player
+					play sound "block.iron_door.open" with volume 26 to player
+					
+					loop 8 times:
+						set {_areel2} to random integer between 1 and 8
+						set {_areel3} to random integer between 1 and 8
+						set {_areel5} to random integer between 1 and 8
+						set {_areel6} to random integer between 1 and 8
+						set {_areel8} to random integer between 1 and 8
+						set {_areel9} to random integer between 1 and 8
+						#リール2の設定
+						if {_areel2} is 1:
+							set {_aitem2} to {test1_a}
+						if {_areel2} is 2:
+							set {_aitem2} to {test2_a}
+						if {_areel2} is 3:
+							set {_aitem2} to {test3_a}
+						if {_areel2} is 4:
+							set {_aitem2} to {test4_a}
+						if {_areel2} is 5:
+							set {_aitem2} to {test5_a}
+						if {_areel2} is 6:
+							set {_aitem2} to {test6_a}
+						if {_areel2} is 7:
+							set {_aitem2} to {test7_a}
+						if {_areel3} is 8:
+							set {_aitem2} to {test8_a}
+						#リール3の設定
+						if {_areel3} is 1:
+							set {_aitem3} to {test1_a}
+						if {_areel3} is 2:
+							set {_aitem3} to {test2_a}
+						if {_areel3} is 3:
+							set {_aitem3} to {test3_a}
+						if {_areel3} is 4:
+							set {_aitem3} to {test4_a}
+						if {_areel3} is 5:
+							set {_aitem3} to {test5_a}
+						if {_areel3} is 6:
+							set {_aitem3} to {test6_a}
+						if {_areel3} is 7:
+							set {_aitem3} to {test7_a}
+						if {_areel3} is 8:
+							set {_aitem3} to {test8_a}
+						#リール5の設定
+						if {_areel5} is 1:
+							set {_aitem5} to {test1_a}
+						if {_areel5} is 2:
+							set {_aitem5} to {test2_a}
+						if {_areel5} is 3:
+							set {_aitem5} to {test3_a}
+						if {_areel5} is 4:
+							set {_aitem5} to {test4_a}
+						if {_areel5} is 5:
+							set {_aitem5} to {test5_a}
+						if {_areel5} is 6:
+							set {_aitem5} to {test6_a}
+						if {_areel5} is 7:
+							set {_aitem5} to {test7_a}
+						if {_areel5} is 8:
+							set {_aitem5} to {test8_a}
+						#リール6の設定
+						if {_areel6} is 1:
+							set {_aitem6} to {test1_a}
+						if {_areel6} is 2:
+							set {_aitem6} to {test2_a}
+						if {_areel6} is 3:
+							set {_aitem6} to {test3_a}
+						if {_areel6} is 4:
+							set {_aitem6} to {test4_a}
+						if {_areel6} is 5:
+							set {_aitem6} to {test5_a}
+						if {_areel6} is 6:
+							set {_aitem6} to {test6_a}
+						if {_areel6} is 7:
+							set {_aitem6} to {test7_a}
+						if {_areel6} is 8:
+							set {_aitem6} to {test8_a}
+						#リール8の設定
+						if {_areel8} is 1:
+							set {_aitem8} to {test1_a}
+						if {_areel8} is 2:
+							set {_aitem8} to {test2_a}
+						if {_areel8} is 3:
+							set {_aitem8} to {test3_a}
+						if {_areel8} is 4:
+							set {_aitem8} to {test4_a}
+						if {_areel8} is 5:
+							set {_aitem8} to {test5_a}
+						if {_areel8} is 6:
+							set {_aitem8} to {test6_a}
+						if {_areel8} is 7:
+							set {_aitem8} to {test7_a}
+						if {_areel8} is 8:
+							set {_aitem8} to {test8_a}
+						#リール9の設定
+						if {_areel9} is 1:
+							set {_aitem9} to {test1_a}
+						if {_areel9} is 2:
+							set {_aitem9} to {test2_a}
+						if {_areel9} is 3:
+							set {_aitem9} to {test3_a}
+						if {_areel9} is 4:
+							set {_aitem9} to {test4_a}
+						if {_areel9} is 5:
+							set {_aitem9} to {test5_a}
+						if {_areel9} is 6:
+							set {_aitem9} to {test6_a}
+						if {_areel9} is 7:
+							set {_aitem9} to {test7_a}
+						if {_areel9} is 8:
+							set {_aitem9} to {test8_a}
+						
+						#額縁にアイテムセット
+						set item of {angelslotitemframe2} to {_aitem2}
+						set item of {angelslotitemframe3} to {_aitem3}
+						set item of {angelslotitemframe5} to {_aitem5}
+						set item of {angelslotitemframe6} to {_aitem6}
+						set item of {angelslotitemframe8} to {_aitem8}
+						set item of {angelslotitemframe9} to {_aitem9}
+						wait 0.1 seconds
+					play sound "block.beacon.activate" with volume 30 and pitch 1.5 to player
+					play sound "block.end_portal_frame.fill" with volume 30 to player
+					play sound "block.iron_door.open" with volume 26 to player
+					
+					loop 8 times:
+						set {_areel3} to random integer between 1 and 8
+						set {_areel6} to random integer between 1 and 8
+						set {_areel9} to random integer between 1 and 8
+						#リール3の設定
+						if {_areel3} is 1:
+							set {_aitem3} to {test1_a}
+						if {_areel3} is 2:
+							set {_aitem3} to {test2_a}
+						if {_areel3} is 3:
+							set {_aitem3} to {test3_a}
+						if {_areel3} is 4:
+							set {_aitem3} to {test4_a}
+						if {_areel3} is 5:
+							set {_aitem3} to {test5_a}
+						if {_areel3} is 6:
+							set {_aitem3} to {test6_a}
+						if {_areel3} is 7:
+							set {_aitem3} to {test7_a}
+						if {_areel3} is 8:
+							set {_aitem3} to {test8_a}
+						#リール6の設定
+						if {_areel6} is 1:
+							set {_aitem6} to {test1_a}
+						if {_areel6} is 2:
+							set {_aitem6} to {test2_a}
+						if {_areel6} is 3:
+							set {_aitem6} to {test3_a}
+						if {_areel6} is 4:
+							set {_aitem6} to {test4_a}
+						if {_areel6} is 5:
+							set {_aitem6} to {test5_a}
+						if {_areel6} is 6:
+							set {_aitem6} to {test6_a}
+						if {_areel6} is 7:
+							set {_aitem6} to {test7_a}
+						if {_areel6} is 8:
+							set {_aitem6} to {test8_a}
+						#リール9の設定
+						if {_areel9} is 1:
+							set {_aitem9} to {test1_a}
+						if {_areel9} is 2:
+							set {_aitem9} to {test2_a}
+						if {_areel9} is 3:
+							set {_aitem9} to {test3_a}
+						if {_areel9} is 4:
+							set {_aitem9} to {test4_a}
+						if {_areel9} is 5:
+							set {_aitem9} to {test5_a}
+						if {_areel9} is 6:
+							set {_aitem9} to {test6_a}
+						if {_areel9} is 7:
+							set {_aitem9} to {test7_a}
+						if {_areel9} is 8:
+							set {_aitem9} to {test8_a}
+						
+						#額縁にアイテムセット
+						set item of {angelslotitemframe3} to {_aitem3}
+						set item of {angelslotitemframe6} to {_aitem6}
+						set item of {angelslotitemframe9} to {_aitem9}
+						wait 0.1 seconds
+					play sound "block.beacon.activate" with volume 30 and pitch 1.5 to player
+					play sound "block.end_portal_frame.fill" with volume 30 to player
+					play sound "block.iron_door.open" with volume 26 to player
+						
+						
+					#当たりの処理
+					#一直線揃い
+					if {_aitem4} is {_aitem5}:
+						if {_aitem4} is {_aitem6}:
+							add {angelslot.jackpot} to player's money
+							command "/discordsrv bcast > [SLOT] **__%player%__**さんが、**エンジェルスロット**で勝利し、**__%{angelslot.jackpot}%円__**を受け取りました！"
+							broadcast "%{slotprefix}% &b&l%player%&aさんが、&f&l&ko&e&lエンジェルスロット&f&l&ko&aで勝利し、&e&l&n%{angelslot.jackpot}%円&aを受け取りました！"
+							set {angelslot.pot} to 0
+							set {angelslot.jackpot} to 0
+							set line 2 of {angelslotpotsign} to "&dPOT: &a%{angelslot.pot}%円"
+							set line 3 of {angelslotpotsign} to "&d報酬: &a500000円"
+							add 1 to {angel-atari.%player's uuid%}
+							play sound "block.amethyst_block.chime" to player
+							play sound "block.end_portal.spawn" to player
+							send title "&f&l&ko&5&lエンジェルスロット&f&l&ko &c&l勝利！" to player
+							give {angel.book} to player
+							set {angelslot.play} to false
+							set {slot.play.%player%} to false
+							stop
+						
+						else:
+							cancel event
+							play sound "block.note_block.bass" to player
+							send "%{slotprefix}% &c残念！外れです！"
+							wait 1 second
+							set {angelslot.play} to false
+							set {slot.play.%player%} to false
+							stop
+							
+					
+					else:
+						cancel event
+						play sound "block.note_block.bass" to player
+						send "%{slotprefix}% &c残念！外れです！"
+						wait 1 second
+						set {angelslot.play} to false
+						set {slot.play.%player%} to false
+						stop
+				
+			if {slot.play.%player%} is true:
+				send "%{slotprefix}% &cスロットプレイ中はほかのスロットを回すことはできません！"
+				cancel event
+				stop
+				
+		if {angelslot.play} is true:
+			cancel event
+			send "%{slotprefix}% &c現在スロットが回っています！"
+			stop
+
+command /setangelbook:
+	permission: admin
+	trigger:
+		set {angel.book} to player's tool
+		stop
+
+command /resetangelslotpots:
+	permission: admin
+	trigger:
+		set {angelslot.pot} to 0
+		set {angelslot.jackpot} to 0
+
+
+
+
+
+
+
+
+
+
+command /settest1:
+	permission: admin
+	trigger:
+		set {test1} to player's tool
+
+command /settest2:
+	permission: admin
+	trigger:
+		set {test2} to player's tool
+
+command /settest3:
+	permission: admin
+	trigger:
+		set {test3} to player's tool
+
+command /settest4:
+	permission: admin
+	trigger:
+		set {test4} to player's tool
+
+command /settest5:
+	permission: admin
+	trigger:
+		set {test5} to player's tool
+
+command /settest6:
+	permission: admin
+	trigger:
+		set {test6} to player's tool
+
+command /settest7:
+	permission: admin
+	trigger:
+		set {test7} to player's tool
+
+command /settest8:
+	permission: admin
+	trigger:
+		set {test8} to player's tool
+
+command /settest9:
+	permission: admin
+	trigger:
+		set {test9} to player's tool
+
+command /settest1_a:
+	permission: admin
+	trigger:
+		set {test1_a} to player's tool
+
+command /settest2_a:
+	permission: admin
+	trigger:
+		set {test2_a} to player's tool
+
+command /settest3_a:
+	permission: admin
+	trigger:
+		set {test3_a} to player's tool
+
+command /settest4_a:
+	permission: admin
+	trigger:
+		set {test4_a} to player's tool
+
+command /settest5_a:
+	permission: admin
+	trigger:
+		set {test5_a} to player's tool
+
+command /settest6_a:
+	permission: admin
+	trigger:
+		set {test6_a} to player's tool
+
+command /settest7_a:
+	permission: admin
+	trigger:
+		set {test7_a} to player's tool
+
+command /settest8_a:
+	permission: admin
+	trigger:
+		set {test8_a} to player's tool
+
+command /settest9_a:
+	permission: admin
+	trigger:
+		set {test9_a} to player's tool
+
+command /setvoid:
+	permission: admin
+	trigger:
+		set {void} to location of player
+
+on server stop:
+	kill {netherslotitemframe1}
+	kill {netherslotitemframe2}
+	kill {netherslotitemframe3}
+	kill {netherslotitemframe4}
+	kill {netherslotitemframe5}
+	kill {netherslotitemframe6}
+	kill {netherslotitemframe7}
+	kill {netherslotitemframe8}
+	kill {netherslotitemframe9}
+	
+	kill {angelslotitemframe1}
+	kill {angelslotitemframe2}
+	kill {angelslotitemframe3}
+	kill {angelslotitemframe4}
+	kill {angelslotitemframe5}
+	kill {angelslotitemframe6}
+	kill {angelslotitemframe7}
+	kill {angelslotitemframe8}
+	kill {angelslotitemframe9}
+
+on skript load:
+	summon itemframe at {netherslotitemframe1.location}
+	set {netherslotitemframe1} to last spawned itemframe
+	summon itemframe at {netherslotitemframe2.location}
+	set {netherslotitemframe2} to last spawned itemframe
+	summon itemframe at {netherslotitemframe3.location}
+	set {netherslotitemframe3} to last spawned itemframe
+	summon glow itemframe at {netherslotitemframe4.location}
+	set {netherslotitemframe4} to last spawned entity
+	summon glow itemframe at {netherslotitemframe5.location}
+	set {netherslotitemframe5} to last spawned entity
+	summon glow itemframe at {netherslotitemframe6.location}
+	set {netherslotitemframe6} to last spawned entity
+	summon itemframe at {netherslotitemframe7.location}
+	set {netherslotitemframe7} to last spawned itemframe
+	summon itemframe at {netherslotitemframe8.location}
+	set {netherslotitemframe8} to last spawned itemframe
+	summon itemframe at {netherslotitemframe9.location}
+	set {netherslotitemframe9} to last spawned itemframe
+	
+	summon itemframe at {angelslotitemframe1.location}
+	set {angelslotitemframe1} to last spawned itemframe
+	summon itemframe at {angelslotitemframe2.location}
+	set {angelslotitemframe2} to last spawned itemframe
+	summon itemframe at {angelslotitemframe3.location}
+	set {angelslotitemframe3} to last spawned itemframe
+	summon glow itemframe at {angelslotitemframe4.location}
+	set {angelslotitemframe4} to last spawned entity
+	summon glow itemframe at {angelslotitemframe5.location}
+	set {angelslotitemframe5} to last spawned entity
+	summon glow itemframe at {angelslotitemframe6.location}
+	set {angelslotitemframe6} to last spawned entity
+	summon itemframe at {angelslotitemframe7.location}
+	set {angelslotitemframe7} to last spawned itemframe
+	summon itemframe at {angelslotitemframe8.location}
+	set {angelslotitemframe8} to last spawned itemframe
+	summon itemframe at {angelslotitemframe9.location}
+	set {angelslotitemframe9} to last spawned itemframe
+
+
+on right click:
+	if player's tool is {angel.book}:
+		cancel event
+	if player's offhand tool is {angel.book}:
+		cancel event
+
+
+#エンジェルスロット=====================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#サマー丁半(夏シーズンのみ)===========================================================================
+Options:
+	{chohan.prefix} : "&b[&c丁半&b]&r"
+	{chohan.players} : 0
+	{chohan.game} : false
+	{chohanplay.%player%} : false
+
+command /seteventdice:
+	permission: admin
+	trigger:
+		set {select.event.dice.%player%} to true
+		stop
+
+command /setdice1000:
+	permission: admin
+	trigger:
+		set {dice.1000} to player's tool
+
+command /setdice1man:
+	permission: admin
+	trigger:
+		set {dice.1man} to player's tool
+
+command /setdice10man:
+	permission: admin
+	trigger:
+		set {dice.10man} to player's tool
+
+command /setdice30man:
+	permission: admin
+	trigger:
+		set {dice.30man} to player's tool
+
+command /setdicecho:
+	permission: admin
+	trigger:
+		set {dice.cho} to player's tool
+
+command /setdicehan:
+	permission: admin
+	trigger:
+		set {dice.han} to player's tool
+
+on right click:
+	loop all players:
+		if {select.event.dice.%player%} is true:
+			set {event.dice} to event-block
+			set {select.event.dice.%player%} to false
+			stop
+		
+		if event-block is {event.dice}:
+			set {_dice.gui} to chest with 3 row named "&2&lゲームモードを選択してください"
+			set slot 0 of {_dice.gui} to lime stained glass pane
+			set slot 1 of {_dice.gui} to lime stained glass pane
+			set slot 2 of {_dice.gui} to lime stained glass pane
+			set slot 3 of {_dice.gui} to lime stained glass pane
+			set slot 4 of {_dice.gui} to lime stained glass pane
+			set slot 5 of {_dice.gui} to lime stained glass pane
+			set slot 6 of {_dice.gui} to lime stained glass pane
+			set slot 7 of {_dice.gui} to lime stained glass pane
+			set slot 8 of {_dice.gui} to lime stained glass pane
+			set slot 9 of {_dice.gui} to lime stained glass pane
+			set slot 10 of {_dice.gui} to {dice.1000}
+			set slot 11 of {_dice.gui} to lime stained glass pane
+			set slot 12 of {_dice.gui} to {dice.1man}
+			set slot 13 of {_dice.gui} to lime stained glass pane
+			set slot 14 of {_dice.gui} to {dice.10man}
+			set slot 15 of {_dice.gui} to lime stained glass pane
+			set slot 16 of {_dice.gui} to {dice.30man}
+			set slot 17 of {_dice.gui} to lime stained glass pane
+			set slot 18 of {_dice.gui} to lime stained glass pane
+			set slot 19 of {_dice.gui} to lime stained glass pane
+			set slot 20 of {_dice.gui} to lime stained glass pane
+			set slot 21 of {_dice.gui} to lime stained glass pane
+			set slot 22 of {_dice.gui} to lime stained glass pane
+			set slot 23 of {_dice.gui} to lime stained glass pane
+			set slot 24 of {_dice.gui} to lime stained glass pane
+			set slot 25 of {_dice.gui} to lime stained glass pane
+			set slot 26 of {_dice.gui} to lime stained glass pane
+			open {_dice.gui} to player
+
+on inventory click:
+	if name of player's current inventory is "&2&lどちらか予想してください":
+		cancel event
+
+on inventory click:
+	if name of player's current inventory is "&2&lゲームモードを選択してください":
+		cancel event
+	
+		if clicked slot is 10:
+			close player's inventory
+			if player's money >= 1000:	
+				set {dice.bet.1000.gui} to chest with 3 row named "&2&lどちらか予想してください"
+				set slot 0 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 1 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 2 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 3 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 4 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 5 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 6 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 7 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 8 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 9 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 10 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 11 of {dice.bet.1000.gui} to {dice.cho}
+				set slot 12 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 13 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 14 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 15 of {dice.bet.1000.gui} to {dice.han}
+				set slot 16 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 17 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 18 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 19 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 20 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 21 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 22 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 23 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 24 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 25 of {dice.bet.1000.gui} to lime stained glass pane
+				set slot 26 of {dice.bet.1000.gui} to lime stained glass pane
+				open {dice.bet.1000.gui} to player
+				stop
+			if player's money < 1000:
+				send "&b[&c丁半&b]&r &c参加費用が足りません！"
+				send "&e必要金額: 1,000円"
+				stop
+	
+	if player's current inventory is {dice.bet.1000.gui}:
+		cancel event
+		if clicked slot is 11:
+			close player's inventory
+			if {chohan.game} is false:
+				set {chohan.players} to 0
+				add player to {chohan.player.list::*}
+				add 1 to {chohan.players}
+				add player to {cho::*}
+				add 1 to {cho.players}
+				set {chohan.game} to true
+				set {chohanplay.%player%} to true
+				remove 1000 from player's money
+				broadcast "&b[&c丁半&b]&r &e&l%player%&aさんが、&e&l&n1,000円丁半&aを始めました！"
+				broadcast "&dカジノの丁半テーブルにて参加しましょう！"
+				broadcast "&b[&c丁半&b]&r &e&l%player%&aさんは、&c&l丁&aにベットしました！"
+				wait 20 seconds
+				broadcast "&b[&c丁半&b]&r &dあと10秒でベットが締め切られます！"
+				wait 5 seconds
+				broadcast "&b[&c丁半&b]&r &dあと5秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと4秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと3秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと2秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと1秒でベットが締め切られます！"
+				wait 1 second
+				if {chohan.players} is not 1:
+					broadcast "&b[&c丁半&b]&r &aサイコロを振っています… &f&l&ko &f&l&ko"
+					loop all players:
+						if loop-player contains {chohan.player.list::*}:
+							play sound "block.anvil.place" to loop-player
+					wait 2 seconds
+					loop all players:
+						if loop-player contains {chohan.player.list::*}:
+							play sound "block.anvil.place" to loop-player
+					set {_1} to random integer between 1 to 6
+					set {_2} to random integer between 1 to 6
+					set {_sum} to {_1} + {_2}
+					#丁(偶数)だった場合の処理
+					if {_sum}/2 is 1 or 2 or 3 or 4 or 5 or 6:
+						broadcast "&b[&c丁半&b]&r &aゲームの結果は %{_1}% , %{_2}% の &c&l丁 &aでした！"
+						set {_a} to 1
+						loop {cho.players} times:
+							set {_cho.player.%{_a}%} to first element of {cho::*}
+							add 2000 to {_cho.player.%{_a}%}'s money
+							add {_cho.player.%{_a}%} to {winner.chohan::*}
+							send "&b[&c丁半&b]&r &aあなたは丁半で勝利し、&e&l2,000円&aを受け取りました！" to {_cho.player.%{_a}%}
+							play sound "entity.player.levelup" to {_cho.player.%{_a}%}
+							play sound "ui.toast.challenge_complete" to {_cho.player.%{_a}%}
+							remove {_cho.player.%{_a}%} from {cho::*}
+							add 1 to {_a}
+						
+						set {_a} to 1
+						loop {han.players} times:
+							set {_han.player.%{_a}%} to first element of {han::*}
+							send "&b[&c丁半&b]&r &c残念！また挑戦してください！" to {_han.player.%{_a}%}
+							play sound "entity.villager.no" to {_han.player.%{_a}%}
+							remove {_han.player.%{_a}%} from {han::*}
+							add 1 to {_a}
+
+						if {winner.chohan::*} is set:
+							set {_winner.chohan} to "%{winner.chohan::*}%"
+							replace all "and" in {_winner.chohan} with ","
+							broadcast "&b[&c丁半&b]&r &a勝者: &d%{_winner.chohan}%"
+							
+						if {winner.chohan::*} is not set:
+							broadcast "&b[&c丁半&b]&r &c勝者はいませんでした！"
+							
+						
+						
+
+                        #ゲーム終了処理
+						set {chohan.players} to 0
+						delete {chohan.player.list::*}
+						set {chohan.players} to 0
+						delete {cho::*}
+						delete {han::*}
+						delete {winner.chohan::*}
+						set {cho.players} to 0
+						set {han.players} to 0
+						set {chohan.game} to false
+						set {chohanplay.%player%} to false
+						loop all players:
+							set {chohanplay.%loop-player%} to false
+						
+							
+					#半(奇数)だった場合の処理
+					else:
+						broadcast "&b[&c丁半&b]&r &aゲームの結果は %{_1}% , %{_2}% の &b&l半 &aでした！"
+						set {_a} to 1
+						loop {han.players} times:
+							set {_han.player.%{_a}%} to first element of {han::*}
+							add 2000 to {_han.player.%{_a}%}'s money
+							add {_han.player.%{_a}%} to {winner.chohan::*}
+							send "&b[&c丁半&b]&r &aあなたは丁半で勝利し、&e&l2,000円&aを受け取りました！" to {_han.player.%{_a}%}
+							play sound "entity.player.levelup" to {_han.player.%{_a}%}
+							play sound "ui.toast.challenge_complete" to {_han.player.%{_a}%}
+							remove {_han.player.%{_a}%} from {han::*}
+							add 1 to {_a}
+						
+						set {_a} to 1
+						loop {cho.players} times:
+							set {_cho.player.%{_a}%} to first element of {cho::*}
+							send "&b[&c丁半&b]&r &c残念！また挑戦してください！" to {_cho.player.%{_a}%}
+							play sound "entity.villager.no" to {_cho.player.%{_a}%}
+							remove {_cho.player.%{_a}%} from {cho::*}
+							add 1 to {_a}
+
+						if {winner.chohan::*} is set:
+							set {_winner.chohan} to "%{winner.chohan::*}%"
+							replace all "and" in {_winner.chohan} with ","
+							broadcast "&b[&c丁半&b]&r &a勝者: &d%{_winner.chohan}%"
+							
+						if {winner.chohan::*} is not set:
+							broadcast "&b[&c丁半&b]&r &c勝者はいませんでした！"
+							
+						
+
+								
+                        #ゲーム終了処理
+						set {chohan.players} to 0
+						delete {chohan.player.list::*}
+						set {chohan.players} to 0
+						delete {cho::*}
+						delete {han::*}
+						delete {winner.chohan::*}
+						set {cho.players} to 0
+						set {han.players} to 0
+						set {chohan.game} to false
+						set {chohanplay.%player%} to false
+						loop all players:
+							set {chohanplay.%loop-player%} to false
+						
+						stop
+					stop
+				
+				if {chohan.players} is 1:
+					add 1000 to player's money
+					broadcast "&b[&c丁半&b]&r &c十分な人数が集まらなかったため、%player%さんの部屋は解散しました。"
+					#ゲーム終了処理
+					set {chohan.players} to 0
+					delete {chohan.player.list::*}
+					set {chohan.players} to 0
+					delete {cho::*}
+					delete {han::*}
+					delete {winner.chohan}
+					set {cho.players} to 0
+					set {han.players} to 0
+					set {chohan.game} to false
+					set {chohanplay.%player%} to false
+					loop all players:
+						set {chohanplay.%loop-player%} to false
+					stop
+				stop
+
+
+			if {chohan.game} is true:
+				if {chohanplay.%player%} is false:
+					add player to {chohan.player.list::*}
+					add 1 to {chohan.players}
+					add player to {cho::*}
+					add 1 to {cho.players}
+					set {chohanplay.%player%} to true
+					remove 1000 from player's money
+					broadcast "&b[&c丁半&b]&r &e&l%player%&aさんは、&c&l丁&aにベットしました！"
+					stop
+				if {chohanplay.%player%} is true:
+					send "&b[&c丁半&b]&r &cあなたはすでにゲームに参加しています！"
+					stop
+
+		#↑ここまでが、ゲーム始めた人が丁の人
+
+
+		if clicked slot is 15:
+			close player's inventory
+			if {chohan.game} is false:
+				set {chohan.players} to 0
+				add player to {chohan.player.list::*}
+				add 1 to {chohan.players}
+				add 1 to {han.players}
+				add player to {han::*}
+				set {chohan.game} to true
+				set {chohanplay.%player%} to true
+				remove 1000 from player's money
+				broadcast "&b[&c丁半&b]&r &e&l%player%&aさんが、&e&l&n1,000円丁半&aを始めました！"
+				broadcast "&dカジノの丁半テーブルにて参加しましょう！"
+				broadcast "&b[&c丁半&b]&r &e&l%player%&aさんは、&b&l半&aにベットしました！"
+				wait 20 seconds
+				broadcast "&b[&c丁半&b]&r &dあと10秒でベットが締め切られます！"
+				wait 5 seconds
+				broadcast "&b[&c丁半&b]&r &dあと5秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと4秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと3秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと2秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと1秒でベットが締め切られます！"
+				wait 1 second
+				if {chohan.players} is not 1:
+					broadcast "&b[&c丁半&b]&r &aサイコロを振っています… &f&l&ko &f&l&ko"
+					loop all players:
+						loop-player contains {chohan.player.list::*}
+						play sound "block.anvil.place" to loop-player
+					wait 2 seconds
+					loop all players:
+						loop-player contains {chohan.player.list::*}
+						play sound "block.anvil.place" to loop-player
+					set {_1} to random integer between 1 to 6
+					set {_2} to random integer between 1 to 6
+					set {_sum} to {_1} + {_2}
+					
+					#丁(偶数)だった場合の処理
+					if {_sum}/2 is 1 or 2 or 3 or 4 or 5 or 6:
+						broadcast "&b[&c丁半&b]&r &aゲームの結果は %{_1}% , %{_2}% の &c&l丁 &aでした！"
+						set {_a} to 1
+						loop {cho.players} times:
+							set {_cho.player.%{_a}%} to first element of {cho::*}
+							add 2000 to {_cho.player.%{_a}%}'s money
+							add {_cho.player.%{_a}%} to {winner.chohan::*}
+							send "&b[&c丁半&b]&r &aあなたは丁半で勝利し、&e&l2,000円&aを受け取りました！" to {_cho.player.%{_a}%}
+							play sound "entity.player.levelup" to {_cho.player.%{_a}%}
+							play sound "ui.toast.challenge_complete" to {_cho.player.%{_a}%}
+							remove {_cho.player.%{_a}%} from {cho::*}
+							add 1 to {_a}
+						
+						set {_a} to 1
+						loop {han.players} times:
+							set {_han.player.%{_a}%} to first element of {han::*}
+							send "&b[&c丁半&b]&r &c残念！また挑戦してください！" to {_han.player.%{_a}%}
+							play sound "entity.villager.no" to {_han.player.%{_a}%}
+							remove {_han.player.%{_a}%} from {han::*}
+							add 1 to {_a}
+
+						if {winner.chohan::*} is set:
+							set {_winner.chohan} to "%{winner.chohan::*}%"
+							replace all "and" in {_winner.chohan} with ","
+							broadcast "&b[&c丁半&b]&r &a勝者: &d%{_winner.chohan}%"
+							
+						if {winner.chohan::*} is not set:
+							broadcast "&b[&c丁半&b]&r &c勝者はいませんでした！"
+							
+						
+						
+
+                        #ゲーム終了処理
+						set {chohan.players} to 0
+						delete {chohan.player.list::*}
+						set {chohan.players} to 0
+						delete {cho::*}
+						delete {han::*}
+						delete {winner.chohan::*}
+						set {cho.players} to 0
+						set {han.players} to 0
+						set {chohan.game} to false
+						set {chohanplay.%player%} to false
+						loop all players:
+							set {chohanplay.%loop-player%} to false
+						
+							
+					#半(奇数)だった場合の処理
+					else:
+						broadcast "&b[&c丁半&b]&r &aゲームの結果は %{_1}% , %{_2}% の &b&l半 &aでした！"
+						set {_a} to 1
+						loop {han.players} times:
+							set {_han.player.%{_a}%} to first element of {han::*}
+							add 2000 to {_han.player.%{_a}%}'s money
+							add {_han.player.%{_a}%} to {winner.chohan::*}
+							send "&b[&c丁半&b]&r &aあなたは丁半で勝利し、&e&l2,000円&aを受け取りました！" to {_han.player.%{_a}%}
+							play sound "entity.player.levelup" to {_han.player.%{_a}%}
+							play sound "ui.toast.challenge_complete" to {_han.player.%{_a}%}
+							remove {_han.player.%{_a}%} from {han::*}
+							add 1 to {_a}
+						
+						set {_a} to 1
+						loop {cho.players} times:
+							set {_cho.player.%{_a}%} to first element of {cho::*}
+							send "&b[&c丁半&b]&r &c残念！また挑戦してください！" to {_cho.player.%{_a}%}
+							play sound "entity.villager.no" to {_cho.player.%{_a}%}
+							remove {_cho.player.%{_a}%} from {cho::*}
+							add 1 to {_a}
+
+						if {winner.chohan::*} is set:
+							set {_winner.chohan} to "%{winner.chohan::*}%"
+							replace all "and" in {_winner.chohan} with ","
+							broadcast "&b[&c丁半&b]&r &a勝者: &d%{_winner.chohan}%"
+							
+						if {winner.chohan::*} is not set:
+							broadcast "&b[&c丁半&b]&r &c勝者はいませんでした！"
+							
+						
+
+                        #ゲーム終了処理
+						set {chohan.players} to 0
+						delete {chohan.player.list::*}
+						set {chohan.players} to 0
+						delete {cho::*}
+						delete {han::*}
+						delete {winner.chohan::*}
+						set {cho.players} to 0
+						set {han.players} to 0
+						set {chohan.game} to false
+						set {chohanplay.%player%} to false
+						loop all players:
+							set {chohanplay.%loop-player%} to false
+						
+					stop
+				
+				
+				if {chohan.players} is 1:
+					add 1000 to player's money
+					broadcast "&b[&c丁半&b]&r &c十分な人数が集まらなかったため、%player%さんの部屋は解散しました。"
+					#ゲーム終了処理
+					set {chohan.players} to 0
+					delete {chohan.player.list::*}
+					set {chohan.players} to 0
+					delete {cho::*}
+					delete {han::*}
+					delete {winner.chohan::*}
+					set {cho.players} to 0
+					set {han.players} to 0
+					set {chohan.game} to false
+					set {chohanplay.%player%} to false
+					loop all players:
+						set {chohanplay.%loop-player%} to false
+					stop
+				stop
+
+
+			if {chohan.game} is true:
+				if {chohanplay.%player%} is false:
+					add player to {chohan.player.list::*}
+					add 1 to {chohan.players}
+					add 1 to {han.players}
+					add player to {han::*}
+					set {chohanplay.%player%} to true
+					remove 1000 from player's money
+					broadcast "&b[&c丁半&b]&r &e&l%player%&aさんは、&b&l半&aにベットしました！"
+					stop
+				if {chohanplay.%player%} is true:
+					send "&b[&c丁半&b]&r &cあなたはすでにゲームに参加しています！"
+					stop
+			stop
+		
+
+
+on inventory click:
+	if name of player's current inventory is "&2&lゲームモードを選択してください":
+		cancel event		
+		if clicked slot is 12:
+			close player's inventory
+			if player's money >= 10000:	
+				set {dice.bet.10000.gui} to chest with 3 row named "&2&lどちらか予想してください"
+				set slot 0 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 1 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 2 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 3 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 4 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 5 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 6 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 7 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 8 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 9 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 10 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 11 of {dice.bet.10000.gui} to {dice.cho}
+				set slot 12 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 13 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 14 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 15 of {dice.bet.10000.gui} to {dice.han}
+				set slot 16 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 17 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 18 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 19 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 20 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 21 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 22 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 23 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 24 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 25 of {dice.bet.10000.gui} to lime stained glass pane
+				set slot 26 of {dice.bet.10000.gui} to lime stained glass pane
+				open {dice.bet.10000.gui} to player
+				stop
+			if player's money < 10000:
+				send "&b[&c丁半&b]&r &c参加費用が足りません！"
+				send "&e必要金額: 10,000円"
+				stop
+	
+	
+	
+	if player's current inventory is {dice.bet.10000.gui}:
+		cancel event
+		if clicked slot is 11:
+			close player's inventory
+			if {chohan.game} is false:
+				set {chohan.players} to 0
+				add player to {chohan.player.list::*}
+				add 1 to {chohan.players}
+				add player to {cho::*}
+				add 1 to {cho.players}
+				set {chohan.game} to true
+				set {chohanplay.%player%} to true
+				remove 10000 from player's money
+				broadcast "&b[&c丁半&b]&r &e&l%player%&aさんが、&e&l&n10,000円丁半&aを始めました！"
+				broadcast "&dカジノの丁半テーブルにて参加しましょう！"
+				broadcast "&b[&c丁半&b]&r &e&l%player%&aさんは、&c&l丁&aにベットしました！"
+				wait 20 seconds
+				broadcast "&b[&c丁半&b]&r &dあと10秒でベットが締め切られます！"
+				wait 5 seconds
+				broadcast "&b[&c丁半&b]&r &dあと5秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと4秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと3秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと2秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと1秒でベットが締め切られます！"
+				wait 1 second
+				if {chohan.players} is not 1:
+					broadcast "&b[&c丁半&b]&r &aサイコロを振っています… &f&l&ko &f&l&ko"
+					loop all players:
+						if loop-player contains {chohan.player.list::*}:
+							play sound "block.anvil.place" to loop-player
+					wait 2 seconds
+					loop all players:
+						if loop-player contains {chohan.player.list::*}:
+							play sound "block.anvil.place" to loop-player
+					set {_1} to random integer between 1 to 6
+					set {_2} to random integer between 1 to 6
+					set {_sum} to {_1} + {_2}
+					#丁(偶数)だった場合の処理
+					if {_sum}/2 is 1 or 2 or 3 or 4 or 5 or 6:
+						broadcast "&b[&c丁半&b]&r &aゲームの結果は %{_1}% , %{_2}% の &c&l丁 &aでした！"
+						set {_a} to 1
+						loop {cho.players} times:
+							set {_cho.player.%{_a}%} to first element of {cho::*}
+							add 20000 to {_cho.player.%{_a}%}'s money
+							add {_cho.player.%{_a}%} to {winner.chohan::*}
+							send "&b[&c丁半&b]&r &aあなたは丁半で勝利し、&e&l20,000円&aを受け取りました！" to {_cho.player.%{_a}%}
+							play sound "entity.player.levelup" to {_cho.player.%{_a}%}
+							play sound "ui.toast.challenge_complete" to {_cho.player.%{_a}%}
+							remove {_cho.player.%{_a}%} from {cho::*}
+							add 1 to {_a}
+						
+						set {_a} to 1
+						loop {han.players} times:
+							set {_han.player.%{_a}%} to first element of {han::*}
+							send "&b[&c丁半&b]&r &c残念！また挑戦してください！" to {_han.player.%{_a}%}
+							play sound "entity.villager.no" to {_han.player.%{_a}%}
+							remove {_han.player.%{_a}%} from {han::*}
+							add 1 to {_a}
+
+						if {winner.chohan::*} is set:
+							set {_winner.chohan} to "%{winner.chohan::*}%"
+							replace all "and" in {_winner.chohan} with ","
+							broadcast "&b[&c丁半&b]&r &a勝者: &d%{_winner.chohan}%"
+							
+						if {winner.chohan::*} is not set:
+							broadcast "&b[&c丁半&b]&r &c勝者はいませんでした！"
+							
+						
+						
+
+                        #ゲーム終了処理
+						set {chohan.players} to 0
+						delete {chohan.player.list::*}
+						set {chohan.players} to 0
+						delete {cho::*}
+						delete {han::*}
+						delete {winner.chohan::*}
+						set {cho.players} to 0
+						set {han.players} to 0
+						set {chohan.game} to false
+						set {chohanplay.%player%} to false
+						loop all players:
+							set {chohanplay.%loop-player%} to false
+						
+							
+					#半(奇数)だった場合の処理
+					else:
+						broadcast "&b[&c丁半&b]&r &aゲームの結果は %{_1}% , %{_2}% の &b&l半 &aでした！"
+						set {_a} to 1
+						loop {han.players} times:
+							set {_han.player.%{_a}%} to first element of {han::*}
+							add 20000 to {_han.player.%{_a}%}'s money
+							add {_han.player.%{_a}%} to {winner.chohan::*}
+							send "&b[&c丁半&b]&r &aあなたは丁半で勝利し、&e&l20,000円&aを受け取りました！" to {_han.player.%{_a}%}
+							play sound "entity.player.levelup" to {_han.player.%{_a}%}
+							play sound "ui.toast.challenge_complete" to {_han.player.%{_a}%}
+							remove {_han.player.%{_a}%} from {han::*}
+							add 1 to {_a}
+						
+						set {_a} to 1
+						loop {cho.players} times:
+							set {_cho.player.%{_a}%} to first element of {cho::*}
+							send "&b[&c丁半&b]&r &c残念！また挑戦してください！" to {_cho.player.%{_a}%}
+							play sound "entity.villager.no" to {_cho.player.%{_a}%}
+							remove {_cho.player.%{_a}%} from {cho::*}
+							add 1 to {_a}
+
+						if {winner.chohan::*} is set:
+							set {_winner.chohan} to "%{winner.chohan::*}%"
+							replace all "and" in {_winner.chohan} with ","
+							broadcast "&b[&c丁半&b]&r &a勝者: &d%{_winner.chohan}%"
+							
+						if {winner.chohan::*} is not set:
+							broadcast "&b[&c丁半&b]&r &c勝者はいませんでした！"
+							
+						
+
+								
+                        #ゲーム終了処理
+						set {chohan.players} to 0
+						delete {chohan.player.list::*}
+						set {chohan.players} to 0
+						delete {cho::*}
+						delete {han::*}
+						delete {winner.chohan::*}
+						set {cho.players} to 0
+						set {han.players} to 0
+						set {chohan.game} to false
+						set {chohanplay.%player%} to false
+						loop all players:
+							set {chohanplay.%loop-player%} to false
+						
+						stop
+					stop
+				
+				if {chohan.players} is 1:
+					add 10000 to player's money
+					broadcast "&b[&c丁半&b]&r &c十分な人数が集まらなかったため、%player%さんの部屋は解散しました。"
+					#ゲーム終了処理
+					set {chohan.players} to 0
+					delete {chohan.player.list::*}
+					set {chohan.players} to 0
+					delete {cho::*}
+					delete {han::*}
+					delete {winner.chohan}
+					set {cho.players} to 0
+					set {han.players} to 0
+					set {chohan.game} to false
+					set {chohanplay.%player%} to false
+					loop all players:
+						set {chohanplay.%loop-player%} to false
+					stop
+				stop
+
+
+			if {chohan.game} is true:
+				if {chohanplay.%player%} is false:
+					add player to {chohan.player.list::*}
+					add 1 to {chohan.players}
+					add player to {cho::*}
+					add 1 to {cho.players}
+					set {chohanplay.%player%} to true
+					remove 10000 from player's money
+					broadcast "&b[&c丁半&b]&r &e&l%player%&aさんは、&c&l丁&aにベットしました！"
+					stop
+				if {chohanplay.%player%} is true:
+					send "&b[&c丁半&b]&r &cあなたはすでにゲームに参加しています！"
+					stop
+
+		#↑ここまでが、ゲーム始めた人が丁の人
+
+
+		if clicked slot is 15:
+			close player's inventory
+			if {chohan.game} is false:
+				set {chohan.players} to 0
+				add player to {chohan.player.list::*}
+				add 1 to {chohan.players}
+				add 1 to {han.players}
+				add player to {han::*}
+				set {chohan.game} to true
+				set {chohanplay.%player%} to true
+				remove 10000 from player's money
+				broadcast "&b[&c丁半&b]&r &e&l%player%&aさんが、&e&l&n10,000円丁半&aを始めました！"
+				broadcast "&dカジノの丁半テーブルにて参加しましょう！"
+				broadcast "&b[&c丁半&b]&r &e&l%player%&aさんは、&b&l半&aにベットしました！"
+				wait 20 seconds
+				broadcast "&b[&c丁半&b]&r &dあと10秒でベットが締め切られます！"
+				wait 5 seconds
+				broadcast "&b[&c丁半&b]&r &dあと5秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと4秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと3秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと2秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと1秒でベットが締め切られます！"
+				wait 1 second
+				if {chohan.players} is not 1:
+					broadcast "&b[&c丁半&b]&r &aサイコロを振っています… &f&l&ko &f&l&ko"
+					loop all players:
+						loop-player contains {chohan.player.list::*}
+						play sound "block.anvil.place" to loop-player
+					wait 2 seconds
+					loop all players:
+						loop-player contains {chohan.player.list::*}
+						play sound "block.anvil.place" to loop-player
+					set {_1} to random integer between 1 to 6
+					set {_2} to random integer between 1 to 6
+					set {_sum} to {_1} + {_2}
+					
+					#丁(偶数)だった場合の処理
+					if {_sum}/2 is 1 or 2 or 3 or 4 or 5 or 6:
+						broadcast "&b[&c丁半&b]&r &aゲームの結果は %{_1}% , %{_2}% の &c&l丁 &aでした！"
+						set {_a} to 1
+						loop {cho.players} times:
+							set {_cho.player.%{_a}%} to first element of {cho::*}
+							add 20000 to {_cho.player.%{_a}%}'s money
+							add {_cho.player.%{_a}%} to {winner.chohan::*}
+							send "&b[&c丁半&b]&r &aあなたは丁半で勝利し、&e&l20,000円&aを受け取りました！" to {_cho.player.%{_a}%}
+							play sound "entity.player.levelup" to {_cho.player.%{_a}%}
+							play sound "ui.toast.challenge_complete" to {_cho.player.%{_a}%}
+							remove {_cho.player.%{_a}%} from {cho::*}
+							add 1 to {_a}
+						
+						set {_a} to 1
+						loop {han.players} times:
+							set {_han.player.%{_a}%} to first element of {han::*}
+							send "&b[&c丁半&b]&r &c残念！また挑戦してください！" to {_han.player.%{_a}%}
+							play sound "entity.villager.no" to {_han.player.%{_a}%}
+							remove {_han.player.%{_a}%} from {han::*}
+							add 1 to {_a}
+
+						if {winner.chohan::*} is set:
+							set {_winner.chohan} to "%{winner.chohan::*}%"
+							replace all "and" in {_winner.chohan} with ","
+							broadcast "&b[&c丁半&b]&r &a勝者: &d%{_winner.chohan}%"
+							
+						if {winner.chohan::*} is not set:
+							broadcast "&b[&c丁半&b]&r &c勝者はいませんでした！"
+							
+						
+						
+
+                        #ゲーム終了処理
+						set {chohan.players} to 0
+						delete {chohan.player.list::*}
+						set {chohan.players} to 0
+						delete {cho::*}
+						delete {han::*}
+						delete {winner.chohan::*}
+						set {cho.players} to 0
+						set {han.players} to 0
+						set {chohan.game} to false
+						set {chohanplay.%player%} to false
+						loop all players:
+							set {chohanplay.%loop-player%} to false
+						
+							
+					#半(奇数)だった場合の処理
+					else:
+						broadcast "&b[&c丁半&b]&r &aゲームの結果は %{_1}% , %{_2}% の &b&l半 &aでした！"
+						set {_a} to 1
+						loop {han.players} times:
+							set {_han.player.%{_a}%} to first element of {han::*}
+							add 20000 to {_han.player.%{_a}%}'s money
+							add {_han.player.%{_a}%} to {winner.chohan::*}
+							send "&b[&c丁半&b]&r &aあなたは丁半で勝利し、&e&l20,000円&aを受け取りました！" to {_han.player.%{_a}%}
+							play sound "entity.player.levelup" to {_han.player.%{_a}%}
+							play sound "ui.toast.challenge_complete" to {_han.player.%{_a}%}
+							remove {_han.player.%{_a}%} from {han::*}
+							add 1 to {_a}
+						
+						set {_a} to 1
+						loop {cho.players} times:
+							set {_cho.player.%{_a}%} to first element of {cho::*}
+							send "&b[&c丁半&b]&r &c残念！また挑戦してください！" to {_cho.player.%{_a}%}
+							play sound "entity.villager.no" to {_cho.player.%{_a}%}
+							remove {_cho.player.%{_a}%} from {cho::*}
+							add 1 to {_a}
+
+						if {winner.chohan::*} is set:
+							set {_winner.chohan} to "%{winner.chohan::*}%"
+							replace all "and" in {_winner.chohan} with ","
+							broadcast "&b[&c丁半&b]&r &a勝者: &d%{_winner.chohan}%"
+							
+						if {winner.chohan::*} is not set:
+							broadcast "&b[&c丁半&b]&r &c勝者はいませんでした！"
+							
+						
+
+                        #ゲーム終了処理
+						set {chohan.players} to 0
+						delete {chohan.player.list::*}
+						set {chohan.players} to 0
+						delete {cho::*}
+						delete {han::*}
+						delete {winner.chohan::*}
+						set {cho.players} to 0
+						set {han.players} to 0
+						set {chohan.game} to false
+						set {chohanplay.%player%} to false
+						loop all players:
+							set {chohanplay.%loop-player%} to false
+					stop
+				stop
+				
+				if {chohan.players} is 1:
+					add 10000 to player's money
+					broadcast "&b[&c丁半&b]&r &c十分な人数が集まらなかったため、%player%さんの部屋は解散しました。"
+					#ゲーム終了処理
+					set {chohan.players} to 0
+					delete {chohan.player.list::*}
+					set {chohan.players} to 0
+					delete {cho::*}
+					delete {han::*}
+					delete {winner.chohan::*}
+					set {cho.players} to 0
+					set {han.players} to 0
+					set {chohan.game} to false
+					set {chohanplay.%player%} to false
+					loop all players:
+						set {chohanplay.%loop-player%} to false
+					stop
+				stop
+
+
+			if {chohan.game} is true:
+				if {chohanplay.%player%} is false:
+					add player to {chohan.player.list::*}
+					add 1 to {chohan.players}
+					add 1 to {han.players}
+					add player to {han::*}
+					set {chohanplay.%player%} to true
+					remove 10000 from player's money
+					broadcast "&b[&c丁半&b]&r &e&l%player%&aさんは、&b&l半&aにベットしました！"
+					stop
+				if {chohanplay.%player%} is true:
+					send "&b[&c丁半&b]&r &cあなたはすでにゲームに参加しています！"
+					stop
+			stop
+
+
+
+on inventory click:
+	if name of player's current inventory is "&2&lゲームモードを選択してください":
+		cancel event		
+		if clicked slot is 14:
+			close player's inventory
+			if player's money >= 100000:	
+				set {dice.bet.100000.gui} to chest with 3 row named "&2&lどちらか予想してください"
+				set slot 0 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 1 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 2 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 3 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 4 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 5 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 6 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 7 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 8 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 9 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 10 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 11 of {dice.bet.100000.gui} to {dice.cho}
+				set slot 12 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 13 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 14 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 15 of {dice.bet.100000.gui} to {dice.han}
+				set slot 16 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 17 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 18 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 19 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 20 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 21 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 22 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 23 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 24 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 25 of {dice.bet.100000.gui} to lime stained glass pane
+				set slot 26 of {dice.bet.100000.gui} to lime stained glass pane
+				open {dice.bet.100000.gui} to player
+				stop
+			if player's money < 100000:
+				send "&b[&c丁半&b]&r &c参加費用が足りません！"
+				send "&e必要金額: 100,000円"
+				stop
+	
+	
+	
+	if player's current inventory is {dice.bet.100000.gui}:
+		cancel event
+		if clicked slot is 11:
+			close player's inventory
+			if {chohan.game} is false:
+				set {chohan.players} to 0
+				add player to {chohan.player.list::*}
+				add 1 to {chohan.players}
+				add player to {cho::*}
+				add 1 to {cho.players}
+				set {chohan.game} to true
+				set {chohanplay.%player%} to true
+				remove 100000 from player's money
+				broadcast "&b[&c丁半&b]&r &e&l%player%&aさんが、&e&l&n100,000円丁半&aを始めました！"
+				broadcast "&dカジノの丁半テーブルにて参加しましょう！"
+				broadcast "&b[&c丁半&b]&r &e&l%player%&aさんは、&c&l丁&aにベットしました！"
+				wait 20 seconds
+				broadcast "&b[&c丁半&b]&r &dあと10秒でベットが締め切られます！"
+				wait 5 seconds
+				broadcast "&b[&c丁半&b]&r &dあと5秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと4秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと3秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと2秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと1秒でベットが締め切られます！"
+				wait 1 second
+				if {chohan.players} is not 1:
+					broadcast "&b[&c丁半&b]&r &aサイコロを振っています… &f&l&ko &f&l&ko"
+					loop all players:
+						if loop-player contains {chohan.player.list::*}:
+							play sound "block.anvil.place" to loop-player
+					wait 2 seconds
+					loop all players:
+						if loop-player contains {chohan.player.list::*}:
+							play sound "block.anvil.place" to loop-player
+					set {_1} to random integer between 1 to 6
+					set {_2} to random integer between 1 to 6
+					set {_sum} to {_1} + {_2}
+					#丁(偶数)だった場合の処理
+					if {_sum}/2 is 1 or 2 or 3 or 4 or 5 or 6:
+						broadcast "&b[&c丁半&b]&r &aゲームの結果は %{_1}% , %{_2}% の &c&l丁 &aでした！"
+						set {_a} to 1
+						loop {cho.players} times:
+							set {_cho.player.%{_a}%} to first element of {cho::*}
+							add 200000 to {_cho.player.%{_a}%}'s money
+							add {_cho.player.%{_a}%} to {winner.chohan::*}
+							send "&b[&c丁半&b]&r &aあなたは丁半で勝利し、&e&l200,000円&aを受け取りました！" to {_cho.player.%{_a}%}
+							play sound "entity.player.levelup" to {_cho.player.%{_a}%}
+							play sound "ui.toast.challenge_complete" to {_cho.player.%{_a}%}
+							remove {_cho.player.%{_a}%} from {cho::*}
+							add 1 to {_a}
+						
+						set {_a} to 1
+						loop {han.players} times:
+							set {_han.player.%{_a}%} to first element of {han::*}
+							send "&b[&c丁半&b]&r &c残念！また挑戦してください！" to {_han.player.%{_a}%}
+							play sound "entity.villager.no" to {_han.player.%{_a}%}
+							remove {_han.player.%{_a}%} from {han::*}
+							add 1 to {_a}
+
+						if {winner.chohan::*} is set:
+							set {_winner.chohan} to "%{winner.chohan::*}%"
+							replace all "and" in {_winner.chohan} with ","
+							broadcast "&b[&c丁半&b]&r &a勝者: &d%{_winner.chohan}%"
+							
+						if {winner.chohan::*} is not set:
+							broadcast "&b[&c丁半&b]&r &c勝者はいませんでした！"
+							
+						
+						
+
+                        #ゲーム終了処理
+						set {chohan.players} to 0
+						delete {chohan.player.list::*}
+						set {chohan.players} to 0
+						delete {cho::*}
+						delete {han::*}
+						delete {winner.chohan::*}
+						set {cho.players} to 0
+						set {han.players} to 0
+						set {chohan.game} to false
+						set {chohanplay.%player%} to false
+						loop all players:
+							set {chohanplay.%loop-player%} to false
+						
+							
+					#半(奇数)だった場合の処理
+					else:
+						broadcast "&b[&c丁半&b]&r &aゲームの結果は %{_1}% , %{_2}% の &b&l半 &aでした！"
+						set {_a} to 1
+						loop {han.players} times:
+							set {_han.player.%{_a}%} to first element of {han::*}
+							add 200000 to {_han.player.%{_a}%}'s money
+							add {_han.player.%{_a}%} to {winner.chohan::*}
+							send "&b[&c丁半&b]&r &aあなたは丁半で勝利し、&e&l200,000円&aを受け取りました！" to {_han.player.%{_a}%}
+							play sound "entity.player.levelup" to {_han.player.%{_a}%}
+							play sound "ui.toast.challenge_complete" to {_han.player.%{_a}%}
+							remove {_han.player.%{_a}%} from {han::*}
+							add 1 to {_a}
+						
+						set {_a} to 1
+						loop {cho.players} times:
+							set {_cho.player.%{_a}%} to first element of {cho::*}
+							send "&b[&c丁半&b]&r &c残念！また挑戦してください！" to {_cho.player.%{_a}%}
+							play sound "entity.villager.no" to {_cho.player.%{_a}%}
+							remove {_cho.player.%{_a}%} from {cho::*}
+							add 1 to {_a}
+
+						if {winner.chohan::*} is set:
+							set {_winner.chohan} to "%{winner.chohan::*}%"
+							replace all "and" in {_winner.chohan} with ","
+							broadcast "&b[&c丁半&b]&r &a勝者: &d%{_winner.chohan}%"
+							
+						if {winner.chohan::*} is not set:
+							broadcast "&b[&c丁半&b]&r &c勝者はいませんでした！"
+							
+						
+
+								
+                        #ゲーム終了処理
+						set {chohan.players} to 0
+						delete {chohan.player.list::*}
+						set {chohan.players} to 0
+						delete {cho::*}
+						delete {han::*}
+						delete {winner.chohan::*}
+						set {cho.players} to 0
+						set {han.players} to 0
+						set {chohan.game} to false
+						set {chohanplay.%player%} to false
+						loop all players:
+							set {chohanplay.%loop-player%} to false
+						
+						stop
+					stop
+				
+				if {chohan.players} is 1:
+					add 100000 to player's money
+					broadcast "&b[&c丁半&b]&r &c十分な人数が集まらなかったため、%player%さんの部屋は解散しました。"
+					#ゲーム終了処理
+					set {chohan.players} to 0
+					delete {chohan.player.list::*}
+					set {chohan.players} to 0
+					delete {cho::*}
+					delete {han::*}
+					delete {winner.chohan}
+					set {cho.players} to 0
+					set {han.players} to 0
+					set {chohan.game} to false
+					set {chohanplay.%player%} to false
+					loop all players:
+						set {chohanplay.%loop-player%} to false
+					stop
+				stop
+
+
+			if {chohan.game} is true:
+				if {chohanplay.%player%} is false:
+					add player to {chohan.player.list::*}
+					add 1 to {chohan.players}
+					add player to {cho::*}
+					add 1 to {cho.players}
+					set {chohanplay.%player%} to true
+					remove 100000 from player's money
+					broadcast "&b[&c丁半&b]&r &e&l%player%&aさんは、&c&l丁&aにベットしました！"
+					stop
+				if {chohanplay.%player%} is true:
+					send "&b[&c丁半&b]&r &cあなたはすでにゲームに参加しています！"
+					stop
+
+		#↑ここまでが、ゲーム始めた人が丁の人
+
+
+		if clicked slot is 15:
+			close player's inventory
+			if {chohan.game} is false:
+				set {chohan.players} to 0
+				add player to {chohan.player.list::*}
+				add 1 to {chohan.players}
+				add 1 to {han.players}
+				add player to {han::*}
+				set {chohan.game} to true
+				set {chohanplay.%player%} to true
+				remove 100000 from player's money
+				broadcast "&b[&c丁半&b]&r &e&l%player%&aさんが、&e&l&n100,000円丁半&aを始めました！"
+				broadcast "&dカジノの丁半テーブルにて参加しましょう！"
+				broadcast "&b[&c丁半&b]&r &e&l%player%&aさんは、&b&l半&aにベットしました！"
+				wait 20 seconds
+				broadcast "&b[&c丁半&b]&r &dあと10秒でベットが締め切られます！"
+				wait 5 seconds
+				broadcast "&b[&c丁半&b]&r &dあと5秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと4秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと3秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと2秒でベットが締め切られます！"
+				wait 1 second
+				broadcast "&b[&c丁半&b]&r &dあと1秒でベットが締め切られます！"
+				wait 1 second
+				if {chohan.players} is not 1:
+					broadcast "&b[&c丁半&b]&r &aサイコロを振っています… &f&l&ko &f&l&ko"
+					loop all players:
+						loop-player contains {chohan.player.list::*}
+						play sound "block.anvil.place" to loop-player
+					wait 2 seconds
+					loop all players:
+						loop-player contains {chohan.player.list::*}
+						play sound "block.anvil.place" to loop-player
+					set {_1} to random integer between 1 to 6
+					set {_2} to random integer between 1 to 6
+					set {_sum} to {_1} + {_2}
+					
+					#丁(偶数)だった場合の処理
+					if {_sum}/2 is 1 or 2 or 3 or 4 or 5 or 6:
+						broadcast "&b[&c丁半&b]&r &aゲームの結果は %{_1}% , %{_2}% の &c&l丁 &aでした！"
+						set {_a} to 1
+						loop {cho.players} times:
+							set {_cho.player.%{_a}%} to first element of {cho::*}
+							add 200000 to {_cho.player.%{_a}%}'s money
+							add {_cho.player.%{_a}%} to {winner.chohan::*}
+							send "&b[&c丁半&b]&r &aあなたは丁半で勝利し、&e&l200,000円&aを受け取りました！" to {_cho.player.%{_a}%}
+							play sound "entity.player.levelup" to {_cho.player.%{_a}%}
+							play sound "ui.toast.challenge_complete" to {_cho.player.%{_a}%}
+							remove {_cho.player.%{_a}%} from {cho::*}
+							add 1 to {_a}
+						
+						set {_a} to 1
+						loop {han.players} times:
+							set {_han.player.%{_a}%} to first element of {han::*}
+							send "&b[&c丁半&b]&r &c残念！また挑戦してください！" to {_han.player.%{_a}%}
+							play sound "entity.villager.no" to {_han.player.%{_a}%}
+							remove {_han.player.%{_a}%} from {han::*}
+							add 1 to {_a}
+
+						if {winner.chohan::*} is set:
+							set {_winner.chohan} to "%{winner.chohan::*}%"
+							replace all "and" in {_winner.chohan} with ","
+							broadcast "&b[&c丁半&b]&r &a勝者: &d%{_winner.chohan}%"
+							
+						if {winner.chohan::*} is not set:
+							broadcast "&b[&c丁半&b]&r &c勝者はいませんでした！"
+							
+						
+						
+
+                        #ゲーム終了処理
+						set {chohan.players} to 0
+						delete {chohan.player.list::*}
+						set {chohan.players} to 0
+						delete {cho::*}
+						delete {han::*}
+						delete {winner.chohan::*}
+						set {cho.players} to 0
+						set {han.players} to 0
+						set {chohan.game} to false
+						set {chohanplay.%player%} to false
+						loop all players:
+							set {chohanplay.%loop-player%} to false
+						
+							
+					#半(奇数)だった場合の処理
+					else:
+						broadcast "&b[&c丁半&b]&r &aゲームの結果は %{_1}% , %{_2}% の &b&l半 &aでした！"
+						set {_a} to 1
+						loop {han.players} times:
+							set {_han.player.%{_a}%} to first element of {han::*}
+							add 200000 to {_han.player.%{_a}%}'s money
+							add {_han.player.%{_a}%} to {winner.chohan::*}
+							send "&b[&c丁半&b]&r &aあなたは丁半で勝利し、&e&l200,000円&aを受け取りました！" to {_han.player.%{_a}%}
+							play sound "entity.player.levelup" to {_han.player.%{_a}%}
+							play sound "ui.toast.challenge_complete" to {_han.player.%{_a}%}
+							remove {_han.player.%{_a}%} from {han::*}
+							add 1 to {_a}
+						
+						set {_a} to 1
+						loop {cho.players} times:
+							set {_cho.player.%{_a}%} to first element of {cho::*}
+							send "&b[&c丁半&b]&r &c残念！また挑戦してください！" to {_cho.player.%{_a}%}
+							play sound "entity.villager.no" to {_cho.player.%{_a}%}
+							remove {_cho.player.%{_a}%} from {cho::*}
+							add 1 to {_a}
+
+						if {winner.chohan::*} is set:
+							set {_winner.chohan} to "%{winner.chohan::*}%"
+							replace all "and" in {_winner.chohan} with ","
+							broadcast "&b[&c丁半&b]&r &a勝者: &d%{_winner.chohan}%"
+							
+						if {winner.chohan::*} is not set:
+							broadcast "&b[&c丁半&b]&r &c勝者はいませんでした！"
+							
+						
+
+                        #ゲーム終了処理
+						set {chohan.players} to 0
+						delete {chohan.player.list::*}
+						set {chohan.players} to 0
+						delete {cho::*}
+						delete {han::*}
+						delete {winner.chohan::*}
+						set {cho.players} to 0
+						set {han.players} to 0
+						set {chohan.game} to false
+						set {chohanplay.%player%} to false
+						loop all players:
+							set {chohanplay.%loop-player%} to false
+					stop
+				
+				
+				if {chohan.players} is 1:
+					add 100000 to player's money
+					broadcast "&b[&c丁半&b]&r &c十分な人数が集まらなかったため、%player%さんの部屋は解散しました。"
+					#ゲーム終了処理
+					set {chohan.players} to 0
+					delete {chohan.player.list::*}
+					set {chohan.players} to 0
+					delete {cho::*}
+					delete {han::*}
+					delete {winner.chohan::*}
+					set {cho.players} to 0
+					set {han.players} to 0
+					set {chohan.game} to false
+					set {chohanplay.%player%} to false
+					loop all players:
+						set {chohanplay.%loop-player%} to false
+					stop
+				stop
+
+
+			if {chohan.game} is true:
+				if {chohanplay.%player%} is false:
+					add player to {chohan.player.list::*}
+					add 1 to {chohan.players}
+					add 1 to {han.players}
+					add player to {han::*}
+					set {chohanplay.%player%} to true
+					remove 100000 from player's money
+					broadcast "&b[&c丁半&b]&r &e&l%player%&aさんは、&b&l半&aにベットしました！"
+					stop
+				if {chohanplay.%player%} is true:
+					send "&b[&c丁半&b]&r &cあなたはすでにゲームに参加しています！"
+					stop
+			stop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+command /showchohangroups:
+	permission: admin
+	trigger:
+		send "丁: %{cho::*}%"
+		send "半: %{han::*}%"
+
+
+
+command /chohanresetconfig:
+	permission: admin
+	trigger:
+		#ゲーム終了処理
+		set {chohan.players} to 0
+		delete {chohan.player.list::*}
+		set {chohan.players} to 0
+		delete {cho::*}
+		delete {han::*}
+		delete {winner.chohan::*}
+		set {cho.players} to 0
+		set {han.players} to 0
+		set {chohan.game} to false
+		set {chohanplay.%player%} to false
+		loop all players:
+			set {chohanplay.%loop-player%} to false
+		
+
+		
+			
+				
+#サマー丁半(夏シーズンのみ)===========================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
