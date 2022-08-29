@@ -1,2 +1,2 @@
-# MCSV-slot
-MCSV内にあるスロットのSkriptです。
+# MCSV-Casino
+MCSV内にあるスロットや丁半のSkriptです。
