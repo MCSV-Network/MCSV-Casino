@@ -32,6 +32,462 @@ command /casinodebug:
 			set {slot.play.%player%} to false
 			set {netherslot.play} to false
 			set {angelslot.play} to false
+			delete {%event-block%.cards::*}
+			delete {%event-block%.player_cards::*}
+			delete {%event-block%.dealer_cards::*}
+			delete {%event-block%.player}
+			set {%event-block%.player.point} to 0
+			set {%event-block%.dealer.point} to 0
+			set {%event-block%.player_cards} to 0
+			set {%event-block%.dealer_cards} to 0
+
+
+#ブラックジャック=====================================================================================
+Variables:
+	{bj.%player%} = false
+
+on sign change:
+	if player has permission "op":
+		if line 1 of event-block is "[bj]":
+			set line 1 of event-block to "&7[&0BLACK&cJACK&7]"
+			set line 2 of event-block to "&eD:&d - -"
+			set line 3 of event-block to "&eP:&d - -"
+			set line 4 of event-block to "&a&l&nクリックで開始！"
+			stop
+
+every seconds:
+	loop all players:
+		if {bj.playtime.%loop-player%} > 0:
+			remove 1 from {bj.playtime.%loop-player%}
+			if {bj.playtime.%loop-player%} = 0:
+				delete {%{bj.table.%loop-player%}%.cards::*}
+				delete {%{bj.table.%loop-player%}%.player_cards::*}
+				delete {%{bj.table.%loop-player%}%.dealer_cards::*}
+				delete {%{bj.table.%loop-player%}%.player}
+				set {%{bj.table.%loop-player%}%.player.point} to 0
+				set {%{bj.table.%loop-player%}%.dealer.point} to 0
+				set {%{bj.table.%loop-player%}%.player_cards} to 0
+				set {%{bj.table.%loop-player%}%.dealer_cards} to 0
+				set {bj.%loop-player%} to false
+				set line 1 of {bj.table.%loop-player%} to "&7[&0BLACK&cJACK&7]"
+				set line 2 of {bj.table.%loop-player%} to "&eD:&d - -"
+				set line 3 of {bj.table.%loop-player%} to "&eP:&d - -"
+				set line 4 of {bj.table.%loop-player%} to "&a&l&nクリックで開始！"
+				send "&7[&bB&cJ&7]&cあなたのプレイしていたブラックジャックテーブル台は、1分以上放置されたためリセットされました。" to loop-player
+
+
+on right click:
+	if line 1 of event-block is "&7[&0BLACK&cJACK&7]" or "&e[&0BLACK&cJACK&e]":
+		line 4 of event-block is "&a&l&nクリックで開始！"
+		if {bj.%player%} is true:
+			send "&7[&bB&cJ&7]&cあなたはすでに他の台でブラックジャックをプレイしています！"
+			stop
+		if {bj.%player%} is false:
+			set {bj.%player%} to true
+			set {%event-block%.player} to player
+			set {bj.playtime.%player%} to 60
+			set {bj.table.%player%} to event-block
+			set line 4 of event-block to ""
+			set line 3 of event-block to "&eP:&d - -"
+			set {_n} to 2
+			loop 9 times:
+				add "%{_n}%♠" to {%event-block%.cards::*}
+				add 1 to {_n}
+			add "A♠" , "J♠" , "Q♠" and "K♠" to {%event-block%.cards::*}
+			set {_n} to 2
+			loop 9 times:
+				add "%{_n}%♥" to {%event-block%.cards::*}
+				add 1 to {_n}
+			add "A♥" , "J♥" , "Q♥" and "K♥" to {%event-block%.cards::*}
+			set {_n} to 2
+			loop 9 times:
+				add "%{_n}%♦" to {%event-block%.cards::*}
+				add 1 to {_n}
+			add "A♦" , "J♦" , "Q♦" and "K♦" to {%event-block%.cards::*}
+			set {_n} to 2
+			loop 9 times:
+				add "%{_n}%♣" to {%event-block%.cards::*}
+				add 1 to {_n}
+			add "A♣" , "J♣" , "Q♣" and "K♣" to {%event-block%.cards::*}
+			set {_n} to 2
+			
+			#D1
+			set {%event-block%.dealer_card.1} to random element of {%event-block%.cards::*}
+			remove {%event-block%.dealer_card.1} from {%event-block%.cards::*}
+			add {%event-block%.dealer_card.1} to {%event-block%.dealer_cards::*}
+			if "%{%event-block%.dealer_card.1}%" contains "2":
+				add 2 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.1}%" contains "3":
+				add 3 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.1}%" contains "4":
+				add 4 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.1}%" contains "5":
+				add 5 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.1}%" contains "6":
+				add 6 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.1}%" contains "7":
+				add 7 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.1}%" contains "8":
+				add 8 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.1}%" contains "9":
+				add 9 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.1}%" contains "10":
+				add 10 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.1}%" contains "J":
+				add 10 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.1}%" contains "Q":
+				add 10 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.1}%" contains "K":
+				add 10 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.1}%" contains "A":
+				add 1 to {%event-block%.dealer.point}
+			
+			#D2
+			set {%event-block%.dealer_card.2} to random element of {%event-block%.cards::*}
+			remove {%event-block%.dealer_card.2} from {%event-block%.cards::*}
+			add {%event-block%.dealer_card.2} to {%event-block%.dealer_cards::*}
+			if "%{%event-block%.dealer_card.2}%" contains "2":
+				add 2 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.2}%" contains "3":
+				add 3 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.2}%" contains "4":
+				add 4 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.2}%" contains "5":
+				add 5 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.2}%" contains "6":
+				add 6 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.2}%" contains "7":
+				add 7 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.2}%" contains "8":
+				add 8 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.2}%" contains "9":
+				add 9 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.2}%" contains "10":
+				add 10 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.2}%" contains "J":
+				add 10 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.2}%" contains "Q":
+				add 10 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.2}%" contains "K":
+				add 10 to {%event-block%.dealer.point}
+			if "%{%event-block%.dealer_card.2}%" contains "A":
+				add 1 to {%event-block%.dealer.point}
+
+			#P1
+			set {%event-block%.player_card.1} to random element of {%event-block%.cards::*}
+			remove {%event-block%.player_card.1} from {%event-block%.cards::*}
+			add {%event-block%.player_card.1} to {%event-block%.player_cards::*}
+			if "%{%event-block%.player_card.1}%" contains "2":
+				add 2 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.1}%" contains "3":
+				add 3 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.1}%" contains "4":
+				add 4 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.1}%" contains "5":
+				add 5 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.1}%" contains "6":
+				add 6 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.1}%" contains "7":
+				add 7 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.1}%" contains "8":
+				add 8 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.1}%" contains "9":
+				add 9 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.1}%" contains "10":
+				add 10 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.1}%" contains "J":
+				add 10 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.1}%" contains "Q":
+				add 10 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.1}%" contains "K":
+				add 10 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.1}%" contains "A":
+				add 1 to {%event-block%.player.point}
+
+			#P2
+			set {%event-block%.player_card.2} to random element of {%event-block%.cards::*}
+			remove {%event-block%.player_card.2} from {%event-block%.cards::*}
+			add {%event-block%.player_card.2} to {%event-block%.player_cards::*}
+			if "%{%event-block%.player_card.2}%" contains "2":
+				add 2 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.2}%" contains "3":
+				add 3 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.2}%" contains "4":
+				add 4 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.2}%" contains "5":
+				add 5 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.2}%" contains "6":
+				add 6 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.2}%" contains "7":
+				add 7 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.2}%" contains "8":
+				add 8 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.2}%" contains "9":
+				add 9 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.2}%" contains "10":
+				add 10 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.2}%" contains "J":
+				add 10 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.2}%" contains "Q":
+				add 10 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.2}%" contains "K":
+				add 10 to {%event-block%.player.point}
+			if "%{%event-block%.player_card.2}%" contains "A":
+				add 1 to {%event-block%.player.point}
+			
+			set {_a} to "%{%event-block%.player_cards::*}%"
+			replace all "and" in {_a} with ","
+			
+			set line 2 of event-block to "&eD:&d %{%event-block%.dealer_card.1}% , ?"
+			play sound "item.book.page_turn" to player
+			wait 1 second
+			set line 3 of event-block to "&eP:&d %{_a}%"
+			play sound "item.book.page_turn" to player
+			wait 1 second
+			set line 4 of event-block to "&a[HIT] &c[STAND]"
+			send action bar "&eD: &b%{%event-block%.dealer_card.1}% + ? &d, &eP: &b%{%event-block%.player.point}%" to player
+			send "&7[&bB&cJ&7]&e右クリック&7で&aヒット&7、&eスニーク+右クリック&7で&aステイ&7できます！"
+			play sound "block.note_block.bell" to player
+
+			set {%event-block%.player_cards} to 2
+			set {%event-block%.dealer_cards} to 2
+
+			#ゲーム終了処理
+			#delete {%event-block%.cards::*}
+			#delete {%event-block%.player_cards::*}
+			#delete {%event-block%.dealer_cards::*}
+			#delete {%event-block%.player}
+			#set {%event-block%.player.point} to 0
+			#set {%event-block%.dealer.point} to 0
+			#set {%event-block%.player_cards} to 0
+			#set {%event-block%.dealer_cards} to 0
+
+on right click:
+	if line 1 of event-block is "&7[&0BLACK&cJACK&7]":
+		if line 4 of event-block is "&a[HIT] &c[STAND]":
+			if {%event-block%.player} is not player:
+				send "&7[&bB&cJ&7]&cその台のブラックジャックはプレイ中です！"
+				stop
+			
+			if {%event-block%.player} is player:
+				if player is not sneaking:
+					#P hit
+					set {bj.playtime.%player%} to 60
+					add 1 to {%event-block%.player_cards}
+					set line 4 of event-block to ""
+					set {%event-block%.player_card.%{%event-block%.player_cards}%} to random element of {%event-block%.cards::*}
+					remove {%event-block%.player_card.%{%event-block%.player_cards}%} from {%event-block%.cards::*}
+					add {%event-block%.player_card.%{%event-block%.player_cards}%} to {%event-block%.player_cards::*}
+					if "%{%event-block%.player_card.%{%event-block%.player_cards}%}%" contains "2":
+						add 2 to {%event-block%.player.point}
+					if "%{%event-block%.player_card.%{%event-block%.player_cards}%}%" contains "3":
+						add 3 to {%event-block%.player.point}
+					if "%{%event-block%.player_card.%{%event-block%.player_cards}%}%" contains "4":
+						add 4 to {%event-block%.player.point}
+					if "%{%event-block%.player_card.%{%event-block%.player_cards}%}%" contains "5":
+						add 5 to {%event-block%.player.point}
+					if "%{%event-block%.player_card.%{%event-block%.player_cards}%}%" contains "6":
+						add 6 to {%event-block%.player.point}
+					if "%{%event-block%.player_card.%{%event-block%.player_cards}%}%" contains "7":
+						add 7 to {%event-block%.player.point}
+					if "%{%event-block%.player_card.%{%event-block%.player_cards}%}%" contains "8":
+						add 8 to {%event-block%.player.point}
+					if "%{%event-block%.player_card.%{%event-block%.player_cards}%}%" contains "9":
+						add 9 to {%event-block%.player.point}
+					if "%{%event-block%.player_card.%{%event-block%.player_cards}%}%" contains "10":
+						add 10 to {%event-block%.player.point}
+					if "%{%event-block%.player_card.%{%event-block%.player_cards}%}%" contains "J":
+						add 10 to {%event-block%.player.point}
+					if "%{%event-block%.player_card.%{%event-block%.player_cards}%}%" contains "Q":
+						add 10 to {%event-block%.player.point}
+					if "%{%event-block%.player_card.%{%event-block%.player_cards}%}%" contains "K":
+						add 10 to {%event-block%.player.point}
+					if "%{%event-block%.player_card.%{%event-block%.player_cards}%}%" contains "A":
+						add 1 to {%event-block%.player.point}
+					
+					set {_a} to "%{%event-block%.player_cards::*}%"
+					replace all "and" in {_a} with ","
+					
+					set line 3 of event-block to "&eP:&d %{_a}%"
+					play sound "item.book.page_turn" to player
+					wait 1 second
+					set line 4 of event-block to "&a[HIT] &c[STAND]"
+					send action bar "&eD: &b%{%event-block%.dealer_card.1}% + ? &d, &eP: &b%{%event-block%.player.point}%" to player
+					
+					if {%event-block%.player.point} >= 22:
+						send "&7[&bB&cJ&7]&c残念！負けです！"
+						play sound "entity.villager.no" at player
+						#ゲーム終了
+						delete {%event-block%.cards::*}
+						delete {%event-block%.player_cards::*}
+						delete {%event-block%.dealer_cards::*}
+						delete {%event-block%.player}
+						set {%event-block%.player.point} to 0
+						set {%event-block%.dealer.point} to 0
+						set {%event-block%.player_cards} to 0
+						set {%event-block%.dealer_cards} to 0
+						set {bj.%player%} to false
+						set line 4 of event-block to "&a&l&nクリックで開始！"
+						stop
+					
+					else:
+						play sound "block.note_block.bell" to player
+				
+				
+				if player is sneaking:
+					#P stand
+					set {bj.playtime.%player%} to -1
+					set {_a} to "%{%event-block%.dealer_cards::*}%"
+					replace all "and" in {_a} with ","
+					set line 2 of event-block to "&eD:&d %{_a}%"
+					play sound "item.book.page_turn" to player
+					send action bar "&eD: &b%{%event-block%.dealer.point}% &d, &eP: &b%{%event-block%.player.point}%" to player
+					wait 1 second
+					if {%event-block%.dealer.point} < 17:
+						add 1 to {%event-block%.dealer_cards}
+						set {%event-block%.dealer_card.%{%event-block%.dealer_cards}%} to random element of {%event-block%.cards::*}
+						remove {%event-block%.dealer_card.%{%event-block%.dealer_cards}%} from {%event-block%.cards::*}
+						add {%event-block%.dealer_card.%{%event-block%.dealer_cards}%} to {%event-block%.dealer_cards::*}
+						if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "2":
+							add 2 to {%event-block%.dealer.point}
+						if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "3":
+							add 3 to {%event-block%.dealer.point}
+						if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "4":
+							add 4 to {%event-block%.dealer.point}
+						if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "5":
+							add 5 to {%event-block%.dealer.point}
+						if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "6":
+							add 6 to {%event-block%.dealer.point}
+						if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "7":
+							add 7 to {%event-block%.dealer.point}
+						if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "8":
+							add 8 to {%event-block%.dealer.point}
+						if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "9":
+							add 9 to {%event-block%.dealer.point}
+						if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "10":
+							add 10 to {%event-block%.dealer.point}
+						if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "J":
+							add 10 to {%event-block%.dealer.point}
+						if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "Q":
+							add 10 to {%event-block%.dealer.point}
+						if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "K":
+							add 10 to {%event-block%.dealer.point}
+						if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "A":
+							add 1 to {%event-block%.dealer.point}
+
+						set {_a} to "%{%event-block%.dealer_cards::*}%"
+						replace all "and" in {_a} with ","
+						set line 2 of event-block to "&eD:&d %{_a}%"
+						play sound "item.book.page_turn" to player
+						send action bar "&eD: &b%{%event-block%.dealer.point}% &d, &eP: &b%{%event-block%.player.point}%" to player
+						wait 1 second
+						loop 52 times:
+							if {%event-block%.dealer.point} < 17:		
+								add 1 to {%event-block%.dealer_cards}
+								set {%event-block%.dealer_card.%{%event-block%.dealer_cards}%} to random element of {%event-block%.cards::*}
+								remove {%event-block%.dealer_card.%{%event-block%.dealer_cards}%} from {%event-block%.cards::*}
+								add {%event-block%.dealer_card.%{%event-block%.dealer_cards}%} to {%event-block%.dealer_cards::*}
+								if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "2":
+									add 2 to {%event-block%.dealer.point}
+								if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "3":
+									add 3 to {%event-block%.dealer.point}
+								if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "4":
+									add 4 to {%event-block%.dealer.point}
+								if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "5":
+									add 5 to {%event-block%.dealer.point}
+								if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "6":
+									add 6 to {%event-block%.dealer.point}
+								if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "7":
+									add 7 to {%event-block%.dealer.point}
+								if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "8":
+									add 8 to {%event-block%.dealer.point}
+								if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "9":
+									add 9 to {%event-block%.dealer.point}
+								if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "10":
+									add 10 to {%event-block%.dealer.point}
+								if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "J":
+									add 10 to {%event-block%.dealer.point}
+								if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "Q":
+									add 10 to {%event-block%.dealer.point}
+								if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "K":
+									add 10 to {%event-block%.dealer.point}
+								if "%{%event-block%.dealer_card.%{%event-block%.dealer_cards}%}%" contains "A":
+									add 1 to {%event-block%.dealer.point}
+
+								set {_a} to "%{%event-block%.dealer_cards::*}%"
+								replace all "and" in {_a} with ","
+								set line 2 of event-block to "&eD:&d %{_a}%"
+								play sound "item.book.page_turn" to player
+								send action bar "&eD: &b%{%event-block%.dealer.point}% &d, &eP: &b%{%event-block%.player.point}%" to player
+								wait 1 second
+					
+					
+					if {%event-block%.dealer.point} >= 22:
+						send "&7[&bB&cJ&7]&aあなたの勝利です！"
+						play sound "entity.player.levelup" at player
+						#ゲーム終了
+						delete {%event-block%.cards::*}
+						delete {%event-block%.player_cards::*}
+						delete {%event-block%.dealer_cards::*}
+						delete {%event-block%.player}
+						set {%event-block%.player.point} to 0
+						set {%event-block%.dealer.point} to 0
+						set {%event-block%.player_cards} to 0
+						set {%event-block%.dealer_cards} to 0
+						set {bj.%player%} to false
+						set line 4 of event-block to "&a&l&nクリックで開始！"
+						stop
+					
+					if {%event-block%.dealer.point} <= 21:
+						if {%event-block%.dealer.point} >= {%event-block%.player.point}:
+							send "&7[&bB&cJ&7]&c残念！負けです！"
+							play sound "entity.villager.no" at player
+							#ゲーム終了
+							delete {%event-block%.cards::*}
+							delete {%event-block%.player_cards::*}
+							delete {%event-block%.dealer_cards::*}
+							delete {%event-block%.player}
+							set {%event-block%.player.point} to 0
+							set {%event-block%.dealer.point} to 0
+							set {%event-block%.player_cards} to 0
+							set {%event-block%.dealer_cards} to 0
+							set {bj.%player%} to false
+							set line 4 of event-block to "&a&l&nクリックで開始！"
+							
+						if {%event-block%.dealer.point} < {%event-block%.player.point}:
+							send "&7[&bB&cJ&7]&aあなたの勝利です！"
+							play sound "entity.player.levelup" at player
+							#ゲーム終了
+							delete {%event-block%.cards::*}
+							delete {%event-block%.player_cards::*}
+							delete {%event-block%.dealer_cards::*}
+							delete {%event-block%.player}
+							set {%event-block%.player.point} to 0
+							set {%event-block%.dealer.point} to 0
+							set {%event-block%.player_cards} to 0
+							set {%event-block%.dealer_cards} to 0
+							set {bj.%player%} to false
+							set line 4 of event-block to "&a&l&nクリックで開始！"
+
+					#ゲーム終了
+					delete {%event-block%.cards::*}
+					delete {%event-block%.player_cards::*}
+					delete {%event-block%.dealer_cards::*}
+					delete {%event-block%.player}
+					set {%event-block%.player.point} to 0
+					set {%event-block%.dealer.point} to 0
+					set {%event-block%.player_cards} to 0
+					set {%event-block%.dealer_cards} to 0
+					set {bj.%player%} to false
+					set line 4 of event-block to "&a&l&nクリックで開始！"
+					stop
+
+
+
+#ブラックジャック=====================================================================================
+
+
+
 
 #宝石スロット=========================================================================================
 on sign change:
@@ -774,7 +1230,7 @@ on right click:
 						set item of {netherslotitemframe8} to {_nitem8}
 						set item of {netherslotitemframe9} to {_nitem9}
 						wait 0.1 seconds
-					play sound "entity.wither.spawn" to player
+					play sound "entity.wither.spawn" at player
 					
 					loop 8 times:
 						set {_nreel2} to random integer between 1 and 8
@@ -894,7 +1350,7 @@ on right click:
 						set item of {netherslotitemframe8} to {_nitem8}
 						set item of {netherslotitemframe9} to {_nitem9}
 						wait 0.1 seconds
-					play sound "entity.wither.spawn" to player
+					play sound "entity.wither.spawn" at player
 					
 					loop 8 times:
 						set {_nreel3} to random integer between 1 and 8
@@ -957,7 +1413,7 @@ on right click:
 						set item of {netherslotitemframe6} to {_nitem6}
 						set item of {netherslotitemframe9} to {_nitem9}
 						wait 0.1 seconds
-					play sound "entity.wither.spawn" to player
+					play sound "entity.wither.spawn" at player
 						
 						
 					#当たりの処理
@@ -966,9 +1422,9 @@ on right click:
 						if {_nitem4} is {_nitem6}:
 							add 500000 to player's money
 							add 1 to {nether-atari.%player's uuid%}
-							play sound "entity.player.levelup" to player
-							play sound "ui.toast.challenge_complete" to player
-							play sound "entity.ender_dragon.ambient" to player
+							play sound "entity.player.levelup" at player
+							play sound "ui.toast.challenge_complete" at player
+							play sound "entity.ender_dragon.ambient" at player
 							send title "&0&l&ko&5&lネザースロット&0&l&ko &c&l勝利！" to player
 							command "/discordsrv bcast > [SLOT] **__%player%__**さんが、**ネザースロット**で勝利し、**__500,000円__**を受け取りました！"
 							broadcast "%{slotprefix}% &b&l%player%&aさんが、&0&l&ko&5&lネザースロット&0&l&ko&aで勝利し、&e&l&n500,000円&aを受け取りました！"
@@ -1386,9 +1842,9 @@ on right click:
 						set item of {angelslotitemframe8} to {_aitem8}
 						set item of {angelslotitemframe9} to {_aitem9}
 						wait 0.1 seconds
-					play sound "block.beacon.activate" with volume 30 and pitch 1.5 to player
-					play sound "block.end_portal_frame.fill" with volume 30 to player
-					play sound "block.iron_door.open" with volume 26 to player
+					play sound "block.beacon.activate" with volume 30 and pitch 1.5 at player
+					play sound "block.end_portal_frame.fill" with volume 30 at player
+					play sound "block.iron_door.open" with volume 26 at player
 					
 					loop 8 times:
 						set {_areel2} to random integer between 1 and 8
@@ -1508,9 +1964,9 @@ on right click:
 						set item of {angelslotitemframe8} to {_aitem8}
 						set item of {angelslotitemframe9} to {_aitem9}
 						wait 0.1 seconds
-					play sound "block.beacon.activate" with volume 30 and pitch 1.5 to player
-					play sound "block.end_portal_frame.fill" with volume 30 to player
-					play sound "block.iron_door.open" with volume 26 to player
+					play sound "block.beacon.activate" with volume 30 and pitch 1.5 at player
+					play sound "block.end_portal_frame.fill" with volume 30 at player
+					play sound "block.iron_door.open" with volume 26 at player
 					
 					loop 8 times:
 						set {_areel3} to random integer between 1 and 8
@@ -1573,9 +2029,9 @@ on right click:
 						set item of {angelslotitemframe6} to {_aitem6}
 						set item of {angelslotitemframe9} to {_aitem9}
 						wait 0.1 seconds
-					play sound "block.beacon.activate" with volume 30 and pitch 1.5 to player
-					play sound "block.end_portal_frame.fill" with volume 30 to player
-					play sound "block.iron_door.open" with volume 26 to player
+					play sound "block.beacon.activate" with volume 30 and pitch 1.5 at player
+					play sound "block.end_portal_frame.fill" with volume 30 at player
+					play sound "block.iron_door.open" with volume 26 at player
 						
 						
 					#当たりの処理
@@ -1590,8 +2046,8 @@ on right click:
 							set line 2 of {angelslotpotsign} to "&dPOT: &a%{angelslot.pot}%円"
 							set line 3 of {angelslotpotsign} to "&d報酬: &a500000円"
 							add 1 to {angel-atari.%player's uuid%}
-							play sound "block.amethyst_block.chime" to player
-							play sound "block.end_portal.spawn" to player
+							play sound "block.amethyst_block.chime" at player
+							play sound "block.end_portal.spawn" at player
 							send title "&f&l&ko&5&lエンジェルスロット&f&l&ko &c&l勝利！" to player
 							give {angel.book} to player
 							set {angelslot.play} to false
@@ -1638,7 +2094,8 @@ command /resetangelslotpots:
 	trigger:
 		set {angelslot.pot} to 0
 		set {angelslot.jackpot} to 0
-
+		set line 2 of {angelslotpotsign} to "&dPOT: &a0円"
+		set line 3 of {angelslotpotsign} to "&d報酬: &a500000円"
 
 
 
@@ -1832,6 +2289,12 @@ Options:
 	{chohan.players} : 0
 	{chohan.game} : false
 	{chohanplay.%player%} : false
+
+command /netherresetlever:
+	permission: admin
+	trigger:
+		set {netherslot.play} to false
+		stop
 
 command /seteventdice:
 	permission: admin
