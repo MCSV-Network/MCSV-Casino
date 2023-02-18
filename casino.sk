@@ -6,6 +6,7 @@ Variables:
 	{angelslot.pot} = 0
 	{bj.%player%} = false
 
+#SpawnPoint=====================================================================================
 command /casino:
 	trigger:
 		teleport player to {casino.spawn}
@@ -18,6 +19,7 @@ command /setcasinospawn:
 		set {casino.spawn} to location of player
 		stop
 
+#Debug=====================================================================================
 command /casinoreset:
 	permission: admin
 	trigger:
@@ -40,9 +42,7 @@ command /casinoreset:
 			set {%event-block%.dealer_cards} to 0
 		send "finished" to player
 
-
 #ブラックジャック=====================================================================================
-
 on sign change:
 	if player has permission "op":
 		if line 1 of event-block is "[bj]":
@@ -71,7 +71,6 @@ every seconds:
 				set line 3 of {bj.table.%loop-player%} to "&eP:&d - -"
 				set line 4 of {bj.table.%loop-player%} to "&a&l&nクリックで開始！"
 				send "&7[&bB&cJ&7]&cあなたのプレイしていたブラックジャックテーブル台は、1分以上放置されたためリセットされました。" to loop-player
-
 
 on right click:
 	if line 1 of event-block is "&7[&0BLACK&cJACK&7]" or "&e[&0BLACK&cJACK&e]":
@@ -877,31 +876,6 @@ on inventory click:
 		cancel event
 #木材スロット=========================================================================================
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ネザースロット=========================================================================================
 command /selectnetherslotitemframe1:
 	permission: admin
@@ -1458,31 +1432,6 @@ on right click:
 
 
 #ネザースロット=========================================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #エンジェルスロット=====================================================================
@@ -3591,38 +3540,14 @@ command /chohanresetconfig:
 
 
 
+#ウォータースロット===========================================================================
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#看板
+on sign change:
+	player has permission "admin"
+	if line 1 of block is "[water-pot]":	
+		set line 1 of block to "&f========================"
+		set line 2 of block to "&dPOT: &a%{waterslot.pot}%円"
+		set {angelslot.jackpot} to 500000 + {waterslot.pot}
+		set line 3 of block to "&d報酬: &a%{waterslot.jackpot}%円"
+		set line 4 of block to "&f========================"
