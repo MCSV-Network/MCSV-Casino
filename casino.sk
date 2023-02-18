@@ -3542,6 +3542,150 @@ command /chohanresetconfig:
 
 #ウォータースロット===========================================================================
 
+#額縁セット
+command /selectwaterslotitemframe1:
+	permission: admin
+	trigger:
+		set {selectwaterslot.frame1} to true
+		send "&a対象の額縁を右クリックしてください。"
+		stop
+
+command /selectwaterslotitemframe2:
+	permission: admin
+	trigger:
+		set {selectwaterslot.frame2} to true
+		send "&a対象の額縁を右クリックしてください。"
+		stop
+
+command /selectwaterslotitemframe3:
+	permission: admin
+	trigger:
+		set {selectwaterslot.frame3} to true
+		send "&a対象の額縁を右クリックしてください。"
+		stop
+
+command /selectwaterslotitemframe4:
+	permission: admin
+	trigger:
+		set {selectwaterslot.frame4} to true
+		send "&a対象の額縁を右クリックしてください。"
+		stop
+
+command /selectwaterslotitemframe5:
+	permission: admin
+	trigger:
+		set {selectwaterslot.frame5} to true
+		send "&a対象の額縁を右クリックしてください。"
+		stop
+
+command /selectwaterslotitemframe6:
+	permission: admin
+	trigger:
+		set {selectwaterslot.frame6} to true
+		send "&a対象の額縁を右クリックしてください。"
+		stop
+
+command /selectwaterslotitemframe7:
+	permission: admin
+	trigger:
+		set {selectwaterslot.frame7} to true
+		send "&a対象の額縁を右クリックしてください。"
+		stop
+
+command /selectwaterslotitemframe8:
+	permission: admin
+	trigger:
+		set {selectwaterslot.frame8} to true
+		send "&a対象の額縁を右クリックしてください。"
+		stop
+
+command /selectwaterslotitemframe9:
+	permission: admin
+	trigger:
+		set {selectwaterslot.frame9} to true
+		send "&a対象の額縁を右クリックしてください。"
+		stop
+
+on right click on entity:
+	if {selectwaterslot.frame1} is true:
+		set {waterslot.frame1} to event-entity
+		set {waterslot.frame1.location} to event-entity's location
+		send "&dsuccess!"
+		set {selectwaterslot.frame1} to false
+		stop
+	if {selectwaterslot.frame2} is true:
+		set {waterslot.frame2} to event-entity
+		set {waterslot.frame2.location} to event-entity's location
+		send "&dsuccess!"
+		set {selectwaterslot.frame2} to false
+		stop
+	if {selectwaterslot.frame3} is true:
+		set {waterslot.frame3} to event-entity
+		set {waterslot.frame3.location} to event-entity's location
+		send "&dsuccess!"
+		set {selectwaterslot.frame3} to false
+		stop
+	if {selectwaterslot.frame4} is true:
+		set {waterslot.frame4} to event-entity
+		set {waterslot.frame4.location} to event-entity's location
+		send "&dsuccess!"
+		set {selectwaterslot.frame4} to false
+		stop
+	if {selectwaterslot.frame5} is true:
+		set {waterslot.frame5} to event-entity
+		set {waterslot.frame5.location} to event-entity's location
+		send "&dsuccess!"
+		set {selectwaterslot.frame5} to false
+		stop
+	if {selectwaterslot.frame6} is true:
+		set {waterslot.frame6} to event-entity
+		set {waterslot.frame6.location} to event-entity's location
+		send "&dsuccess!"
+		set {selectwaterslot.frame6} to false
+		stop
+	if {selectwaterslot.frame7} is true:
+		set {waterslot.frame7} to event-entity
+		set {waterslot.frame7.location} to event-entity's location
+		send "&dsuccess!"
+		set {selectwaterslot.frame7} to false
+		stop
+	if {selectwaterslot.frame8} is true:
+		set {waterslot.frame8} to event-entity
+		set {waterslot.frame8.location} to event-entity's location
+		send "&dsuccess!"
+		set {selectwaterslot.frame8} to false
+		stop
+	if {selectwaterslot.frame9} is true:
+		set {waterslot.frame9} to event-entity
+		set {waterslot.frame9.location} to event-entity's location
+		send "&dsuccess!"
+		set {selectwaterslot.frame9} to false
+		stop
+
+#レバー・POT
+command /selectwaterslotlever:
+	permission: admin
+	trigger:
+		set {selectwaterslot.lever} to true
+		send "selectwaterslot.lever mode was turned on."
+		stop
+
+command /selectwaterslotpotsign:
+	permission: admin
+	trigger:
+		set {selectwaterslot.potsign} to true
+		stop
+
+on right click:
+	if {selectwaterslot.lever} is true:
+		set {waterslotlever} to event-block
+		set {selectwaterslot.lever} to false
+		stop
+	
+	if {selectwaterslot.potsign} is true:
+		set {waterslotpotsign} to event-block
+		set {selectwaterslot.potsign} to false
+		stop
 #看板
 on sign change:
 	player has permission "admin"
@@ -3570,3 +3714,15 @@ on right click:
 					set {slot.play.%player%} to true
 					set {waterslot.play} to true
 					remove 10000 from player's money
+
+command /fcreturn [<number>]:
+	trigger:
+		set {_num} to cr(player, arg-1)
+		if {_num} is set:
+			send "result: %{_num}%" to player
+		if {_num} is not set:
+			send "error!" to player
+
+function learningreturn(p: player, num: number) :: num:
+	set {_num} to {_num} + 1
+	return {_num}
