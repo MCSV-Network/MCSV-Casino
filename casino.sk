@@ -3689,7 +3689,23 @@ on right click:
 					set {slot.play.%player%} to true
 					set {waterslot.play} to true
 					remove 10000 from player's money
+					waterslotreel()
 
+
+function waterslotreel():
+	loop 20 times:
+		set {_areel1} to random integer between 1 and 8
+		set {_areel2} to random integer between 1 and 8
+		set {_areel3} to random integer between 1 and 8
+		set {_areel4} to random integer between 1 and 8
+		set {_areel5} to random integer between 1 and 8
+		set {_areel6} to random integer between 1 and 8
+		set {_areel7} to random integer between 1 and 8
+		set {_areel8} to random integer between 1 and 8
+		set {_areel9} to random integer between 1 and 8
+		#続き書け
+#メモ
+#{test1_a}とかってやつはただのアイテムなのでいい感じに弄って構文を削減する
 function waterpot():
 	add 1000 to {waterslot.pot}
 	set line 2 of {waterslot.potsign} to "&dPOT: &a%{waterslot.pot}%円"
