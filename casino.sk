@@ -3543,68 +3543,46 @@ command /chohanresetconfig:
 #ウォータースロット===========================================================================
 
 #額縁セット
-command /selectwaterslotitemframe1:
+command /selectwaterslotframe [<number>]:
 	permission: admin
+	permission message: &c権限ないよ!
 	trigger:
-		set {selectwaterslot.frame1} to true
-		send "&a対象の額縁を右クリックしてください。"
-		stop
-
-command /selectwaterslotitemframe2:
-	permission: admin
-	trigger:
-		set {selectwaterslot.frame2} to true
-		send "&a対象の額縁を右クリックしてください。"
-		stop
-
-command /selectwaterslotitemframe3:
-	permission: admin
-	trigger:
-		set {selectwaterslot.frame3} to true
-		send "&a対象の額縁を右クリックしてください。"
-		stop
-
-command /selectwaterslotitemframe4:
-	permission: admin
-	trigger:
-		set {selectwaterslot.frame4} to true
-		send "&a対象の額縁を右クリックしてください。"
-		stop
-
-command /selectwaterslotitemframe5:
-	permission: admin
-	trigger:
-		set {selectwaterslot.frame5} to true
-		send "&a対象の額縁を右クリックしてください。"
-		stop
-
-command /selectwaterslotitemframe6:
-	permission: admin
-	trigger:
-		set {selectwaterslot.frame6} to true
-		send "&a対象の額縁を右クリックしてください。"
-		stop
-
-command /selectwaterslotitemframe7:
-	permission: admin
-	trigger:
-		set {selectwaterslot.frame7} to true
-		send "&a対象の額縁を右クリックしてください。"
-		stop
-
-command /selectwaterslotitemframe8:
-	permission: admin
-	trigger:
-		set {selectwaterslot.frame8} to true
-		send "&a対象の額縁を右クリックしてください。"
-		stop
-
-command /selectwaterslotitemframe9:
-	permission: admin
-	trigger:
-		set {selectwaterslot.frame9} to true
-		send "&a対象の額縁を右クリックしてください。"
-		stop
+		if arg-1 is 1:
+			set {selectwaterslot.frame1} to true
+			send "&a対象の額縁を右クリックしてください。"
+			stop
+		if arg-1 is 2:
+			set {selectwaterslot.frame2} to true
+			send "&a対象の額縁を右クリックしてください。"
+			stop
+		if arg-1 is 3:
+			set {selectwaterslot.frame3} to true
+			send "&a対象の額縁を右クリックしてください。"
+			stop
+		if arg-1 is 4:
+			set {selectwaterslot.frame4} to true
+			send "&a対象の額縁を右クリックしてください。"
+			stop
+		if arg-1 is 5:
+			set {selectwaterslot.frame5} to true
+			send "&a対象の額縁を右クリックしてください。"
+			stop
+		if arg-1 is 6:
+			set {selectwaterslot.frame6} to true
+			send "&a対象の額縁を右クリックしてください。"
+			stop
+		if arg-1 is 7:
+			set {selectwaterslot.frame7} to true
+			send "&a対象の額縁を右クリックしてください。"
+			stop
+		if arg-1 is 8:
+			set {selectwaterslot.frame8} to true
+			send "&a対象の額縁を右クリックしてください。"
+			stop
+		if arg-1 is 9:
+			set {selectwaterslot.frame9} to true
+			send "&a対象の額縁を右クリックしてください。"
+			stop
 
 on right click on entity:
 	if {selectwaterslot.frame1} is true:
@@ -3683,7 +3661,7 @@ on right click:
 		stop
 	
 	if {selectwaterslot.potsign} is true:
-		set {waterslotpotsign} to event-block
+		set {waterslot.potsign} to event-block
 		set {selectwaterslot.potsign} to false
 		stop
 #看板
@@ -3707,22 +3685,25 @@ on right click:
 					stop
 				else:
 					cancel event
-					add 1000 to {waterslot.pot}
-					set line 2 of {angelslotpotsign} to "&dPOT: &a%{waterslot.pot}%円"
-					set {waterslot.jackpot} to 500000 + {waterslot.pot}
-					set line 3 of {angelslotpotsign} to "&d報酬: &a%{waterslot.jackpot}%円"
+					waterpot()
 					set {slot.play.%player%} to true
 					set {waterslot.play} to true
 					remove 10000 from player's money
 
-command /fcreturn [<number>]:
-	trigger:
-		set {_num} to cr(player, arg-1)
-		if {_num} is set:
-			send "result: %{_num}%" to player
-		if {_num} is not set:
-			send "error!" to player
-
-function learningreturn(p: player, num: number) :: num:
-	set {_num} to {_num} + 1
-	return {_num}
+function waterpot():
+	add 1000 to {waterslot.pot}
+	set line 2 of {waterslot.potsign} to "&dPOT: &a%{waterslot.pot}%円"
+	set {waterslot.jackpot} to 500000 + {waterslot.pot}
+	set line 3 of {waterslot.potsign} to "&d報酬: &a%{waterslot.jackpot}%円"
+#function test
+#command /fcreturn [<number>]:
+#	trigger:
+#		set {_num} to cr(player, arg-1)
+#		if {_num} is set:
+#			send "result: %{_num}%" to player
+#		if {_num} is not set:
+#			send "error!" to player
+#
+#function learningreturn(p: player, num: number) :: num:
+#	set {_num} to {_num} + 1
+#	return {_num}
