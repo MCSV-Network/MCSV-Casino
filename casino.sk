@@ -1,3 +1,11 @@
+Variables:
+	{slotprefix} = "&6[&eSLOT&6]&r"
+	{slot.play.%player%} = false
+	{netherslot.play} = false
+	{angelslot.play} = false
+	{angelslot.pot} = 0
+	{bj.%player%} = false
+
 command /casino:
 	trigger:
 		teleport player to {casino.spawn}
@@ -10,20 +18,10 @@ command /setcasinospawn:
 		set {casino.spawn} to location of player
 		stop
 
-
-
-
-
-
-
-
-Variables:
-	{slotprefix} = "&6[&eSLOT&6]&r"
-	{slot.play.%player%} = false
-
-command /casinodebug:
+command /casinoreset:
 	permission: admin
 	trigger:
+		send "casino.sk - reset" to player
 		loop all players:
 			set {jewelry-atari.%loop-player's uuid%} to 0
 			set {planks-atari.%loop-player's uuid%} to 0
@@ -40,11 +38,10 @@ command /casinodebug:
 			set {%event-block%.dealer.point} to 0
 			set {%event-block%.player_cards} to 0
 			set {%event-block%.dealer_cards} to 0
+		send "finished" to player
 
 
 #ブラックジャック=====================================================================================
-Variables:
-	{bj.%player%} = false
 
 on sign change:
 	if player has permission "op":
@@ -1032,9 +1029,6 @@ on right click on entity:
 		set {selectnetherslotitemframe9} to false
 		stop
 
-Variables:
-	{netherslot.play} = false
-
 on right click:
 	if {selectnetherslotlever} is true:
 		set {netherslotlever} to event-block
@@ -1623,11 +1617,6 @@ on right click on entity:
 		send "&dset angelslotitemframe9 was successfully."
 		set {selectangelslotitemframe9} to false
 		stop
-
-Variables:
-	{angelslot.play} = false
-	{angelslot.pot} = 0
-
 
 on sign change:
 	player has permission "casino.slots"
