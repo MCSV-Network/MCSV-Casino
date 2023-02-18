@@ -3570,3 +3570,13 @@ on right click:
 					set {slot.play.%player%} to true
 					set {waterslot.play} to true
 					remove 10000 from player's money
+
+command /fcreturn:
+	trigger:
+		learningreturn(uwu-, player)
+		send "1. %{_result}%" to player
+
+learningreturn(t1: text p: player):
+	set {_result} to {_t1} + ok
+	send "running" to {_p}
+	return {_result}
