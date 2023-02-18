@@ -3573,10 +3573,10 @@ on right click:
 
 command /fcreturn:
 	trigger:
-		learningreturn(uwu-, player)
+		learningreturn(uwu, player)
 		send "1. %{_result}%" to player
 
-learningreturn(t1: text p: player):
+function learningreturn(t1: text p: player):
 	set {_result} to {_t1} + ok
 	send "running" to {_p}
 	return {_result}
