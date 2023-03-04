@@ -1,3 +1,4 @@
+#MCSV-Casino
 Variables:
 	{slotprefix} = "&6[&eSLOT&6]&r"
 	{slot.play.%player%} = false
