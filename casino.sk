@@ -42,7 +42,17 @@ command /casinoreset:
 			set {%event-block%.player_cards} to 0
 			set {%event-block%.dealer_cards} to 0
 		send "finished" to player
-
+#定義
+command /devilbookzipitem:
+	permission: admin
+	trigger:
+		set {netherbook} to player's tool
+#解凍
+on right click:
+	if player's tool is {netherbook}:
+		send "&0&l&ko&5&l悪魔の本&0&l&ko&r&a.zip&7を解凍しました。"
+		loop 9 times:
+			give enchanted book named "&0&l&ko&5&l悪魔の本&0&l&ko" with lore "&dネザースロットで勝利したもののみに与えられる" and "&d悪魔の邪念が詰まった本。" to player
 #ブラックジャック=====================================================================================
 on sign change:
 	if player has permission "op":
