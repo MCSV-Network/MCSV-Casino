@@ -50,8 +50,8 @@ command /devilbookzipitem:
 #解凍
 on right click:
 	if player's tool is {netherbook}:
-		send "&0&l&ko&5&l悪魔の本&0&l&ko&r&a.zip&7を解凍しました。"
 		remove {netherbook} from player
+		send "&0&l&ko&5&l悪魔の本&0&l&ko&r&a.zip&7を解凍しました。"
 		loop 9 times:
 			give enchanted book named "&0&l&ko&5&l悪魔の本&0&l&ko" with lore "&dネザースロットで勝利したもののみに与えられる" and "&d悪魔の邪念が詰まった本。" to player
 		stop
