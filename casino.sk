@@ -54,6 +54,7 @@ on right click:
 		remove {netherbook} from player
 		loop 9 times:
 			give enchanted book named "&0&l&ko&5&l悪魔の本&0&l&ko" with lore "&dネザースロットで勝利したもののみに与えられる" and "&d悪魔の邪念が詰まった本。" to player
+			stop
 #ブラックジャック=====================================================================================
 on sign change:
 	if player has permission "op":
